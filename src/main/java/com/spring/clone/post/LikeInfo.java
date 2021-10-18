@@ -1,5 +1,7 @@
 package com.spring.clone.post;
 
+import com.spring.clone.user.User;
+
 import javax.persistence.*;
 
 @Entity

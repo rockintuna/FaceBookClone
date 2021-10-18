@@ -1,10 +1,10 @@
 package com.spring.clone.comment;
 
 import com.spring.clone.comment.dto.CommentRequestDto;
-import com.spring.clone.post.dto.PostRequestDto;
+import com.spring.clone.sercurity.UserDetailsImpl;
+import com.spring.clone.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -18,11 +18,10 @@ public class CommentController {
 
     @PostMapping("/comment")
     public Map<String, Object> addComment(
-            @AuthenticationPrincipal UserDetails userDetails,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestBody CommentRequestDto requestDto) {
         Map<String, Object> result = new HashMap<>();
-//        todo Get User
-//        User user = userDetails.getUser();
+        User user = userDetails.getUser();
         commentService.addComment(requestDto, user);
 
         result.put("data", null);
@@ -31,11 +30,10 @@ public class CommentController {
 
     @PutMapping("/comment/{commentId}")
     public Map<String, Object> editComment(
-            @AuthenticationPrincipal UserDetails userDetails,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable("postId") Long commentId,
             @RequestBody CommentRequestDto requestDto) {
-        //        todo Get User
-//        User user = userDetails.getUser();
+        User user = userDetails.getUser();
         Map<String, Object> result = new HashMap<>();
         commentService.editComment(commentId, requestDto, user);
 
@@ -43,13 +41,12 @@ public class CommentController {
         return result;
     }
 
-    @DeleteMapping
+    @DeleteMapping("/comment/{commentId}")
     public Map<String, Object> deletePost(
-            @AuthenticationPrincipal UserDetails userDetails,
-            @PathVariable("postId") Long commentId
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable("commentId") Long commentId
     ) {
-        //        todo Get User
-//        User user = userDetails.getUser();
+        User user = userDetails.getUser();
         Map<String, Object> result = new HashMap<>();
         commentService.deleteComment(commentId, user);
 

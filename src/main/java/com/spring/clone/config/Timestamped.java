@@ -1,4 +1,4 @@
-package com.spring.clone.global.entity;
+package com.spring.clone.config;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;

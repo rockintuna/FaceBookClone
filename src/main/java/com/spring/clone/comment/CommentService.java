@@ -1,9 +1,10 @@
 package com.spring.clone.comment;
 
 import com.spring.clone.comment.dto.CommentRequestDto;
-import com.spring.clone.global.exception.CommentNotFoundException;
+import com.spring.clone.exception.CommentNotFoundException;
 import com.spring.clone.post.Post;
 import com.spring.clone.post.PostService;
+import com.spring.clone.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;

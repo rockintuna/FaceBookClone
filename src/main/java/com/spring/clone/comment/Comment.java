@@ -1,8 +1,8 @@
 package com.spring.clone.comment;
 
-import com.spring.clone.comment.dto.CommentRequestDto;
-import com.spring.clone.global.entity.Timestamped;
+import com.spring.clone.config.Timestamped;
 import com.spring.clone.post.Post;
+import com.spring.clone.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

@@ -1,10 +1,11 @@
 package com.spring.clone.post;
 
 import com.spring.clone.post.dto.PostRequestDto;
+import com.spring.clone.sercurity.UserDetailsImpl;
+import com.spring.clone.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -23,48 +24,50 @@ public class PostController {
         Map<String, Object> result = new HashMap<>();
         Page<Post> posts = postService.getPostsOrderByCreatedAtDesc(page);
 
+        result.put("statusCode", 200);
+        result.put("responseMessage", "게시글 조회 성공");
         result.put("posts", posts);
         return result;
     }
 
     @PostMapping("/post")
     public Map<String, Object> addPost(
-            @AuthenticationPrincipal UserDetails userDetails,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestBody PostRequestDto requestDto) {
         Map<String, Object> result = new HashMap<>();
-//        todo Get User
-//        User user = userDetails.getUser();
+        User user = userDetails.getUser();
         postService.addPost(requestDto, user);
 
-        result.put("data", null);
+        result.put("statusCode", 200);
+        result.put("responseMessage", "게시글 작성 성공");
         return result;
     }
 
     @PutMapping("/post/{postId}")
     public Map<String, Object> editPost(
-            @AuthenticationPrincipal UserDetails userDetails,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable("postId") Long postId,
             @RequestBody PostRequestDto requestDto) {
         Map<String, Object> result = new HashMap<>();
-        //        todo Get User
-//        User user = userDetails.getUser();
+        User user = userDetails.getUser();
         postService.editPost(postId, requestDto, user);
 
-        result.put("data", null);
+        result.put("statusCode", 200);
+        result.put("responseMessage", "게시글 수정 성공");
         return result;
     }
 
-    @DeleteMapping
+    @DeleteMapping("/post/{postId}")
     public Map<String, Object> deletePost(
-            @AuthenticationPrincipal UserDetails userDetails,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable("postId") Long postId
     ) {
-        //        todo Get User
-//        User user = userDetails.getUser();
+        User user = userDetails.getUser();
         Map<String, Object> result = new HashMap<>();
         postService.deletePost(postId, user);
 
-        result.put("data", null);
+        result.put("statusCode", 200);
+        result.put("responseMessage", "게시글 삭제 성공");
         return result;
     }
 
