@@ -22,7 +22,11 @@ public class Post extends Timestamped {
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private Comment comment;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID", nullable = false)
+    private LikeInfo likeInfo;
+
+//    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+//    private Comment comment;
 
 }
