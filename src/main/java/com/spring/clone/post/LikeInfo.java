@@ -1,10 +1,16 @@
 package com.spring.clone.post;
 
 import com.spring.clone.user.User;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 public class LikeInfo {
 
     @Id
