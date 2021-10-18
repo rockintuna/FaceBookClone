@@ -48,7 +48,7 @@ public class UserService {
         if (!password.isEmpty() && !passwordCheck.isEmpty()) {
             if (password.length() >= 6 && password.length() <= 20) {
                 if (!password.equals(passwordCheck)) {
-                    throw new CloneException(ErrorCode.USER_NOT_FOUND);
+                    throw new CloneException(ErrorCode.PASSWORD_EQUAL);
                 }
             } else {
                 throw new CloneException(ErrorCode.PASSWORD_PATTERN_LENGTH);
@@ -59,19 +59,23 @@ public class UserService {
         }
 
 
-
-        //사용자 ROLE 확인
-        UserRoleEnum role = UserRoleEnum.USER;
-        if (requestDto.isAdmin()) {
-            if (!requestDto.getAdminToken().equals(ADMIN_TOKEN)) {
-                throw new CloneException(ErrorCode.ADMIN_PASSWORD_DISCORDANCE);
-            }
-            role = UserRoleEnum.ADMIN;
-        }
+        //회원정보저장
         requestDto.setPwd(pwd);
         User user = new User(requestDto);
+
         return userRepository.save(user);
+
+
+
     }
+
+//    private Sex sexselect(String sex) {
+//        if (sex.equalsIgnoreCase("man")) { //대문자 소문자 상관없고
+//            return Sex.MAN;
+//        }
+//        return Sex.WOMAN;
+//    }
+
 
     //로그인
     public User login(UserRequestDto requestDto) throws CloneException {

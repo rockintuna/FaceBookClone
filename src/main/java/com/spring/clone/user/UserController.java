@@ -53,14 +53,16 @@ public class UserController {
         User user = userService.login(requestDto);
 
         Map<String,Object> result =new HashMap<>();
-        result.put("token", jwtTokenProvider.createToken(user.getUserId(), user.getUserId())); // "username" : {username}
+        result.put("token","Bearer"+ jwtTokenProvider.createToken(user.getUserId(), user.getUserId())); // "username" : {username}
         result.put("userId", user.getUserId());
 
-        result.put("responseMessage", "로그인 성공");
         result.put("statusCode",200);
+        result.put("responseMessage", "로그인 성공");
+
         return result;
     }
 
+    //중복확인
     @PostMapping("/signup/duplicate_id")
     public Map<String, String> duplicateId(@RequestBody UserRequestDto userRequestDto) {
         return userService.duplicateId(userRequestDto);

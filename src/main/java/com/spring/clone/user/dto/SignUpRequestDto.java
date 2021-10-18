@@ -1,5 +1,6 @@
 package com.spring.clone.user.dto;
 
+import com.spring.clone.user.Sex;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,12 +20,8 @@ public class SignUpRequestDto {
     private String firstName;
     private String lastName;
     private LocalDate birth;
-    private String sex;
+    private Sex sex;
     private boolean admin = false;
     private String adminToken = "";
 
-//
-//    private LocalDate birth() {
-//        birth.format("yyyy-mm-dd");
-//    }
 }

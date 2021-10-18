@@ -34,24 +34,23 @@ public class User {
     @Column(nullable = false)
     private LocalDate birth;
 
-    @Column(nullable = false)
-    private String sex;
-
     @Column(nullable = true)
     @Enumerated(value = EnumType.STRING)
-    private UserRoleEnum role;
+    private Sex sex;
 
 
-    public User(String userId, String pwd, String firstName, String lastName , String sex , LocalDate birth ,UserRoleEnum role) {
-        this.userId = userId;
-        this.pwd = pwd;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birth = birth;
-        this.sex = sex;
-        this.role = role;
 
-    }
+//
+//    public User(String userId, String pwd, Sex sex ,String firstName, String lastName, LocalDate birth) {
+//        this.userId = userId;
+//        this.pwd = pwd;
+//        this.firstName = firstName;
+//        this.lastName = lastName;
+//        this.birth = birth;
+//        this.sex = sex;
+//
+//    }
+
     public User(SignUpRequestDto requestDto) {
         this.userId = requestDto.getUserId();
         this.firstName = requestDto.getFirstName();
@@ -60,9 +59,6 @@ public class User {
         this.pwd = requestDto.getPwd();
         this.birth = requestDto.getBirth();
     }
-    public User(String userId, String pwd, UserRoleEnum role) {
-        this.userId = userId;
-        this.pwd = pwd;
-        this.role = role;
-    }
+
+
 }
