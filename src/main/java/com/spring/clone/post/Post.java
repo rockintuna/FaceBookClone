@@ -70,9 +70,10 @@ public class Post extends Timestamped {
                     .postId(this.id)
                     .content(this.content)
                     .imageUrl(this.imageUrl)
-                    .likeCount(this.likeInfoList.size())
                     .firstName(user.getFirstName())
                     .lastName(user.getLastName())
+                    .likeCount(this.likeInfoList.size())
+                    .commentCount(this.comments.size())
                     .isLiked(false)
                     .commentResponseDtoList(addCommentsDtoListFrom())
                     .createdAt(this.getCreatedAt())
@@ -82,12 +83,14 @@ public class Post extends Timestamped {
                     .postId(this.id)
                     .content(this.content)
                     .imageUrl(this.imageUrl)
-                    .likeCount(this.likeInfoList.size())
                     .firstName(user.getFirstName())
                     .lastName(user.getLastName())
+                    .likeCount(this.likeInfoList.size())
+                    .commentCount(this.comments.size())
                     .isLiked(this.likeInfoList.stream()
                             .anyMatch(likeInfo ->
                                     likeInfo.getUser().getUserId().equals(userDetails.getUsername())))
+                    .commentResponseDtoList(addCommentsDtoListFrom())
                     .createdAt(this.getCreatedAt())
                     .build();
         }
