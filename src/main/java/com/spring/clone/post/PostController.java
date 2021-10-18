@@ -1,11 +1,9 @@
 package com.spring.clone.post;
 
 import com.spring.clone.post.dto.PostRequestDto;
-import com.spring.clone.post.dto.PostResponseDto;
 import com.spring.clone.sercurity.UserDetailsImpl;
 import com.spring.clone.user.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 

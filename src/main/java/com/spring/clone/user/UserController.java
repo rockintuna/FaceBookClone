@@ -40,7 +40,8 @@ public class UserController {
         result.put("lastName", user.getLastName());
         result.put("birth", user.getBirth());
         result.put("sex",user.getSex());
-        result.put("message", "회원가입 성공");
+        result.put("statusCode", 200);
+        result.put("responseMessage", "회원가입 성공");
 
         return result;
     }
@@ -48,16 +49,15 @@ public class UserController {
 
     // 로그인
     @PostMapping("/user/login")
-    public Map<String,String> login(@RequestBody UserRequestDto requestDto) throws CloneException {
+    public Map<String,Object> login(@RequestBody UserRequestDto requestDto) throws CloneException {
         User user = userService.login(requestDto);
 
-        Map<String,String> result =new HashMap<>();
+        Map<String,Object> result =new HashMap<>();
         result.put("token", jwtTokenProvider.createToken(user.getUserId(), user.getUserId())); // "username" : {username}
         result.put("userId", user.getUserId());
 
-        result.put("result", "true");
-        result.put("message", "로그인 성공");
-
+        result.put("responseMessage", "로그인 성공");
+        result.put("statusCode",200);
         return result;
     }
 
@@ -75,6 +75,7 @@ public class UserController {
         Map<String, String> result = new HashMap<>();
         result.put("userId", userDetails.getUser().getUserId());
         result.put("result", "true");
+
 
         return result;
     }

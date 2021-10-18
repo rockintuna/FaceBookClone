@@ -25,16 +25,16 @@ public class User {
     @Column(nullable = false)
     private String pwd;
 
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false)
     private String firstName;
 
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false)
     private String lastName;
 
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false)
     private LocalDate birth;
 
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false)
     private String sex;
 
     @Column(nullable = true)
