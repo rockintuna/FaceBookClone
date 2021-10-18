@@ -1,11 +1,11 @@
 package com.spring.clone.post.dto;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class PostRequestDto {
-    private final String content;
-    private final String imageUrl;
+    private String content;
+    private String imageUrl;
 }
