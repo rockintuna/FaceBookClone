@@ -34,8 +34,10 @@ public class CommentController {
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("postId") Long commentId,
             @RequestBody CommentRequestDto requestDto) {
+        //        todo Get User
+//        User user = userDetails.getUser();
         Map<String, Object> result = new HashMap<>();
-        commentService.editComment(commentId, requestDto);
+        commentService.editComment(commentId, requestDto, user);
 
         result.put("data", null);
         return result;
@@ -44,10 +46,12 @@ public class CommentController {
     @DeleteMapping
     public Map<String, Object> deletePost(
             @AuthenticationPrincipal UserDetails userDetails,
-            @PathVariable("postId") Long postId
+            @PathVariable("postId") Long commentId
     ) {
+        //        todo Get User
+//        User user = userDetails.getUser();
         Map<String, Object> result = new HashMap<>();
-        commentService.deleteComment(commentId, requestDto);
+        commentService.deleteComment(commentId, user);
 
         result.put("data", null);
         return result;
