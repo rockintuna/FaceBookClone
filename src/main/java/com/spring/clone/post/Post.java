@@ -61,7 +61,7 @@ public class Post extends Timestamped {
     }
 
     public boolean isWritedBy(User user) {
-        return this.user == user;
+        return this.user.equals(user);
     }
 
     public PostResponseDto toPostResponseDto(UserDetails userDetails) {
