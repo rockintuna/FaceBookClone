@@ -18,7 +18,7 @@ public class SignUpRequestDto {
     private String pwdCheck;
     private String firstName;
     private String lastName;
-    private String birth;
+    private LocalDate birth;
     private String sex;
     private boolean admin = false;
     private String adminToken = "";

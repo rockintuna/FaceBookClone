@@ -7,7 +7,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @NoArgsConstructor
@@ -33,7 +32,7 @@ public class User {
     private String lastName;
 
     @Column(nullable = false,unique = true)
-    private String birth;
+    private LocalDate birth;
 
     @Column(nullable = false,unique = true)
     private String sex;
@@ -43,17 +42,24 @@ public class User {
     private UserRoleEnum role;
 
 
-//    public User(String userId, String pwd, String firstName, String lastName , String sex , LocalDate birth ,UserRoleEnum role) {
-//        this.userId = userId;
-//        this.pwd = pwd;
-//        this.firstName = firstName;
-//        this.lastName = lastName;
-//        this.birth = birth;
-//        this.sex = sex;
-//        this.role = role;
-//
-//    }
+    public User(String userId, String pwd, String firstName, String lastName , String sex , LocalDate birth ,UserRoleEnum role) {
+        this.userId = userId;
+        this.pwd = pwd;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birth = birth;
+        this.sex = sex;
+        this.role = role;
 
+    }
+    public User(SignUpRequestDto requestDto) {
+        this.userId = requestDto.getUserId();
+        this.firstName = requestDto.getFirstName();
+        this.sex = requestDto.getSex();
+        this.lastName = requestDto.getLastName();
+        this.pwd = requestDto.getPwd();
+        this.birth = requestDto.getBirth();
+    }
     public User(String userId, String pwd, UserRoleEnum role) {
         this.userId = userId;
         this.pwd = pwd;

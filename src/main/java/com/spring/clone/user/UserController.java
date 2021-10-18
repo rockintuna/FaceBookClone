@@ -40,6 +40,7 @@ public class UserController {
         result.put("lastName", user.getLastName());
         result.put("birth", user.getBirth());
         result.put("sex",user.getSex());
+        result.put("message", "회원가입 성공");
 
         return result;
     }
@@ -55,6 +56,7 @@ public class UserController {
         result.put("userId", user.getUserId());
 
         result.put("result", "true");
+        result.put("message", "로그인 성공");
 
         return result;
     }
@@ -64,7 +66,7 @@ public class UserController {
         return userService.duplicateId(userRequestDto);
     }
 
-    // jwt refresh토큰 이 없어서 확인차
+    // jwt refresh토큰 이 없어서 확인차생성 // 새로고침하면 그냥 자동으로 로그아웃됨
     @GetMapping("/auth")
     public Map<String, String> loginCheck(@AuthenticationPrincipal UserDetailsImpl userDetails) throws CloneException {
         if (userDetails == null) {

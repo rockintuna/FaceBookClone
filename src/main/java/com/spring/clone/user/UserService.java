@@ -68,11 +68,12 @@ public class UserService {
             }
             role = UserRoleEnum.ADMIN;
         }
-
-        User user = new User(userId,pwd,role);
+        requestDto.setPwd(pwd);
+        User user = new User(requestDto);
         return userRepository.save(user);
     }
 
+    //로그인
     public User login(UserRequestDto requestDto) throws CloneException {
         User user = userRepository.findByUserId(requestDto.getUserId()).orElseThrow(
                 () -> new CloneException(ErrorCode.USER_NOT_FOUND)
