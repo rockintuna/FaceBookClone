@@ -1,6 +1,7 @@
 package com.spring.clone.post;
 
 import com.spring.clone.comment.Comment;
+import com.spring.clone.comment.dto.CommentResponseDto;
 import com.spring.clone.config.Timestamped;
 import com.spring.clone.post.dto.PostRequestDto;
 import com.spring.clone.post.dto.PostResponseDto;
@@ -13,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Entity
@@ -38,7 +40,7 @@ public class Post extends Timestamped {
 
     @BatchSize(size = 100)
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<Comment> comment = new ArrayList<>();
+    private List<Comment> comments = new ArrayList<>();
 
 
     public Post(String content, String imageUrl, User user) {
@@ -67,27 +69,46 @@ public class Post extends Timestamped {
             return PostResponseDto.builder()
                     .postId(this.id)
                     .content(this.content)
-//                    .commentCount(this.comments.size())
+                    .imageUrl(this.imageUrl)
                     .likeCount(this.likeInfoList.size())
                     .firstName(user.getFirstName())
                     .lastName(user.getLastName())
                     .isLiked(false)
+                    .commentResponseDtoList(addCommentsDtoListFrom())
                     .createdAt(this.getCreatedAt())
                     .build();
         } else {
             return PostResponseDto.builder()
                     .postId(this.id)
                     .content(this.content)
-//                    .commentCount(this.comments.size())
+                    .imageUrl(this.imageUrl)
                     .likeCount(this.likeInfoList.size())
                     .firstName(user.getFirstName())
                     .lastName(user.getLastName())
-//                    .isLiked(false)
                     .isLiked(this.likeInfoList.stream()
                             .anyMatch(likeInfo ->
                                     likeInfo.getUser().getUserId().equals(userDetails.getUsername())))
                     .createdAt(this.getCreatedAt())
                     .build();
         }
+    }
+
+    private List<CommentResponseDto> addCommentsDtoListFrom() {
+        List<CommentResponseDto> responseDtoList = new ArrayList<>();
+        comments.stream()
+                .sorted(Comparator.comparing(Timestamped::getCreatedAt).reversed())
+                .forEach(comment -> commentToResponseDto(responseDtoList, comment));
+        return responseDtoList;
+    }
+
+    private void commentToResponseDto(List<CommentResponseDto> responseDtoList, Comment comment) {
+        responseDtoList.add(CommentResponseDto.builder()
+                .commentId(comment.getId())
+                .content(comment.getContent())
+                .userId(comment.getUser().getUserId())
+                .firstName(comment.getUser().getFirstName())
+                .lastName(comment.getUser().getLastName())
+                .createdAt(comment.getCreatedAt())
+                .build());
     }
 }
