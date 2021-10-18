@@ -31,7 +31,7 @@ public class CommentController {
     @PutMapping("/comment/{commentId}")
     public Map<String, Object> editComment(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @PathVariable("postId") Long commentId,
+            @PathVariable("commentId") Long commentId,
             @RequestBody CommentRequestDto requestDto) {
         User user = userDetails.getUser();
         Map<String, Object> result = new HashMap<>();
