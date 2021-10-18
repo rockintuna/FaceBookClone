@@ -3,13 +3,17 @@ package com.spring.clone.post;
 import com.spring.clone.global.entity.Timestamped;
 import com.spring.clone.post.dto.PostRequestDto;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class Post extends Timestamped {
 
     @Id
@@ -23,9 +27,8 @@ public class Post extends Timestamped {
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID", nullable = false)
-    private LikeInfo likeInfo;
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    private List<LikeInfo> likeInfo = new ArrayList<>();
 
 //    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
 //    private Comment comment;
