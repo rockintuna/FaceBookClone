@@ -51,4 +51,8 @@ public class Post extends Timestamped {
         this.content = requestDto.getContent();
         this.imageUrl = requestDto.getImgUrl();
     }
+
+    public boolean isWritedBy(User user) {
+        return this.user == user;
+    }
 }
