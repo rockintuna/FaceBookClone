@@ -1,7 +1,6 @@
 package com.spring.clone.post;
 
 import com.spring.clone.global.exception.PostNotFoundException;
-import com.spring.clone.post.dto.PostRepository;
 import com.spring.clone.post.dto.PostRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

@@ -1,4 +1,4 @@
-package com.spring.clone.post.dto;
+package com.spring.clone.post;
 
 import com.spring.clone.post.Post;
 import org.springframework.data.domain.Page;

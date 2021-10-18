@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -33,7 +32,9 @@ public class PostController {
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody PostRequestDto requestDto) {
         Map<String, Object> result = new HashMap<>();
-        postService.addPost(requestDto);
+//        todo Get User
+//        User user = userDetails.getUser();
+        postService.addPost(requestDto, user);
 
         result.put("data", null);
         return result;
@@ -45,7 +46,9 @@ public class PostController {
             @PathVariable("postId") Long postId,
             @RequestBody PostRequestDto requestDto) {
         Map<String, Object> result = new HashMap<>();
-        postService.editPost(postId, requestDto);
+        //        todo Get User
+//        User user = userDetails.getUser();
+        postService.editPost(postId, requestDto, user);
 
         result.put("data", null);
         return result;
@@ -56,8 +59,10 @@ public class PostController {
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("postId") Long postId
     ) {
+        //        todo Get User
+//        User user = userDetails.getUser();
         Map<String, Object> result = new HashMap<>();
-        postService.deletePost(postId);
+        postService.deletePost(postId, user);
 
         result.put("data", null);
         return result;
