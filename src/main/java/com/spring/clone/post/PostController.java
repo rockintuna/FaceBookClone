@@ -17,9 +17,11 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/post")
-    public Map<String, Object> getPostsOrderByCreatedAtDesc() {
+    public Map<String, Object> getPostsOrderByCreatedAtDesc(
+            @RequestParam("page") Long page
+    ) {
         Map<String, Object> result = new HashMap<>();
-        List<Post> posts = postService.getPostsOrderByCreatedAtDesc();
+        List<Post> posts = postService.getPostsOrderByCreatedAtDesc(page);
 
         result.put("posts", posts);
         return result;
