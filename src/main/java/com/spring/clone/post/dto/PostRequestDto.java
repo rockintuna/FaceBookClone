@@ -7,5 +7,5 @@ import lombok.Getter;
 @Builder
 public class PostRequestDto {
     private String content;
-    private String imgUrl;
+    private String imageUrl;
 }
