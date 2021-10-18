@@ -1,6 +1,7 @@
 package com.spring.clone.post;
 
 import com.spring.clone.post.dto.PostRequestDto;
+import com.spring.clone.post.dto.PostResponseDto;
 import com.spring.clone.sercurity.UserDetailsImpl;
 import com.spring.clone.user.User;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -19,14 +21,13 @@ public class PostController {
 
     @GetMapping("/post")
     public Map<String, Object> getPostsOrderByCreatedAtDesc(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestParam("page") Integer page
     ) {
-        Map<String, Object> result = new HashMap<>();
-        Page<Post> posts = postService.getPostsOrderByCreatedAtDesc(page);
-
+        Map<String, Object> result =
+                new HashMap<>(postService.getPostsOrderByCreatedAtDesc(page - 1, userDetails));
         result.put("statusCode", 200);
         result.put("responseMessage", "게시글 조회 성공");
-        result.put("posts", posts);
         return result;
     }
 
