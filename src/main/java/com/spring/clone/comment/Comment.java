@@ -1,5 +1,6 @@
 package com.spring.clone.comment;
 
+import com.spring.clone.comment.dto.CommentRequestDto;
 import com.spring.clone.global.entity.Timestamped;
 import com.spring.clone.post.Post;
 import lombok.Getter;
@@ -27,4 +28,18 @@ public class Comment extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
+
+    public Comment(String content, Post post, User user) {
+        this.content = content;
+        this.post = post;
+        this.user = user;
+    }
+
+    public static Comment of(String content, Post post, User user) {
+        return new Comment(content, post, user);
+    }
+
+    public boolean isWritedBy(User user) {
+        return this.user == user;
+    }
 }
