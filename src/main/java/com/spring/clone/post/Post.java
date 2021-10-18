@@ -1,6 +1,7 @@
 package com.spring.clone.post;
 
 import com.spring.clone.global.entity.Timestamped;
+import com.spring.clone.post.dto.PostRequestDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,4 +30,21 @@ public class Post extends Timestamped {
 //    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
 //    private Comment comment;
 
+
+    public Post(String content, String imageUrl, User user) {
+        this.content = content;
+        this.imageUrl = imageUrl;
+        this.user = user;
+    }
+
+    public static Post of(PostRequestDto requestDto, User user) {
+        return new Post(requestDto.getContent(),
+                requestDto.getImgUrl(),
+                user);
+    }
+
+    public void update(PostRequestDto requestDto) {
+        this.content = requestDto.getContent();
+        this.imageUrl = requestDto.getImgUrl();
+    }
 }
