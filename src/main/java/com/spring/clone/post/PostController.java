@@ -2,6 +2,7 @@ package com.spring.clone.post;
 
 import com.spring.clone.post.dto.PostRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class PostController {
             @RequestParam("page") Integer page
     ) {
         Map<String, Object> result = new HashMap<>();
-        List<Post> posts = postService.getPostsOrderByCreatedAtDesc(page);
+        Page<Post> posts = postService.getPostsOrderByCreatedAtDesc(page);
 
         result.put("posts", posts);
         return result;
