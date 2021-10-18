@@ -54,7 +54,7 @@ public class UserController {
         result.put("token", jwtTokenProvider.createToken(user.getUserId(), user.getUserId())); // "username" : {username}
         result.put("userId", user.getUserId());
 
-        result.put("result", "ture");
+        result.put("result", "true");
 
         return result;
     }

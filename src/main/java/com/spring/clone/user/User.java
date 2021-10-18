@@ -33,7 +33,7 @@ public class User {
     private String lastName;
 
     @Column(nullable = false,unique = true)
-    private LocalDate birth;
+    private String birth;
 
     @Column(nullable = false,unique = true)
     private String sex;

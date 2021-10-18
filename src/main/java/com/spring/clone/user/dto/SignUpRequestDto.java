@@ -18,13 +18,12 @@ public class SignUpRequestDto {
     private String pwdCheck;
     private String firstName;
     private String lastName;
-    private LocalDate birth;
+    private String birth;
     private String sex;
     private boolean admin = false;
     private String adminToken = "";
 
-    LocalDate localDate=LocalDate.now();
-
+//
 //    private LocalDate birth() {
 //        birth.format("yyyy-mm-dd");
 //    }

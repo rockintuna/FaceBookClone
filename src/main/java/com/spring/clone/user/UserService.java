@@ -33,7 +33,7 @@ public class UserService {
         // 패스워드 암호화
         String pwd = passwordEncoder.encode(requestDto.getPwd());
 
-        //가입 email(id) 중복체크
+        //가입 아이디 중복체크
         String userId = requestDto.getUserId();
         Optional<User> found = userRepository.findByUserId(userId);
         if (found.isPresent()){
@@ -78,7 +78,7 @@ public class UserService {
                 () -> new CloneException(ErrorCode.USER_NOT_FOUND)
         );
 
-        // 패스워드 암호화
+
         if (!passwordEncoder.matches(requestDto.getPwd(), user.getPwd())) {
             throw new CloneException(ErrorCode.USER_NOT_FOUND);
         }
