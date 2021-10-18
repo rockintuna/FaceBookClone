@@ -4,6 +4,8 @@ import com.spring.clone.post.dto.PostRequestDto;
 import com.spring.clone.sercurity.UserDetailsImpl;
 import com.spring.clone.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +36,7 @@ public class PostController {
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestBody PostRequestDto requestDto) {
         Map<String, Object> result = new HashMap<>();
-        User user = userDetails.getUser();
+        User user = getUserByUserdetailsIfExist(userDetails);
         postService.addPost(requestDto, user);
 
         result.put("statusCode", 200);
@@ -48,7 +50,7 @@ public class PostController {
             @PathVariable("postId") Long postId,
             @RequestBody PostRequestDto requestDto) {
         Map<String, Object> result = new HashMap<>();
-        User user = userDetails.getUser();
+        User user = getUserByUserdetailsIfExist(userDetails);
         postService.editPost(postId, requestDto, user);
 
         result.put("statusCode", 200);
@@ -61,7 +63,7 @@ public class PostController {
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable("postId") Long postId
     ) {
-        User user = userDetails.getUser();
+        User user = getUserByUserdetailsIfExist(userDetails);
         Map<String, Object> result = new HashMap<>();
         postService.deletePost(postId, user);
 
@@ -70,4 +72,14 @@ public class PostController {
         return result;
     }
 
+
+    private User getUserByUserdetailsIfExist(UserDetailsImpl userDetails) {
+        User user;
+        if ( userDetails != null ) {
+            user = userDetails.getUser();
+        } else {
+            throw new AuthenticationServiceException("로그인이 필요합니다.");
+        }
+        return user;
+    }
 }

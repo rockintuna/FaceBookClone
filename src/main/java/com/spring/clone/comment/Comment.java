@@ -40,6 +40,6 @@ public class Comment extends Timestamped {
     }
 
     public boolean isWritedBy(User user) {
-        return this.user == user;
+        return this.user.equals(user);
     }
 }

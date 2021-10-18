@@ -1,10 +1,10 @@
 package com.spring.clone.comment.dto;
 
-import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
+@NoArgsConstructor
 public class CommentRequestDto {
     private Long postId;
     private String content;
