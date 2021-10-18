@@ -1,5 +1,6 @@
 package com.spring.clone.post;
 
+import com.spring.clone.comment.Comment;
 import com.spring.clone.global.entity.Timestamped;
 import com.spring.clone.post.dto.PostRequestDto;
 import lombok.Getter;
@@ -30,8 +31,8 @@ public class Post extends Timestamped {
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<LikeInfo> likeInfo = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-//    private Comment comment;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<Comment> comment = new ArrayList<>();
 
 
     public Post(String content, String imageUrl, User user) {
