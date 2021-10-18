@@ -69,12 +69,6 @@ public class UserService {
 
     }
 
-//    private Sex sexselect(String sex) {
-//        if (sex.equalsIgnoreCase("man")) { //대문자 소문자 상관없고
-//            return Sex.MAN;
-//        }
-//        return Sex.WOMAN;
-//    }
 
 
     //로그인
