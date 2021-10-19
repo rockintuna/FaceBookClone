@@ -8,10 +8,7 @@ import com.spring.clone.user.dto.SignUpRequestDto;
 import com.spring.clone.user.dto.UserRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -81,6 +78,23 @@ public class UserController {
         result.put("statusCode", "200");
 
 
+        return result;
+    }
+
+    @PutMapping("/user/image")
+    public Map<String, String> updateUserProfileImage(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestBody String imageUrl) throws CloneException {
+        if (userDetails == null) {
+            throw new CloneException(ErrorCode.LOGIN_TOKEN_EXPIRE);
+        }
+        User user = userService.updateUserProfileImage(imageUrl, userDetails.getUser().getUserId());
+        Map<String, String> result = new HashMap<>();
+
+        result.put("imageUrl", user.getImageUrl());
+        result.put("userId", user.getUserId());
+        result.put("responseMessage", "사용자 이미지 수정 완료");
+        result.put("statusCode", "200");
         return result;
     }
 }

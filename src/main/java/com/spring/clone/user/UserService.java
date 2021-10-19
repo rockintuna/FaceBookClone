@@ -93,5 +93,13 @@ public class UserService {
         result.put("message", "중복된 아이디가 존재합니다.");
         return result;
     }
+
+    public User updateUserProfileImage(String imageUrl, String userId) {
+        User user = userRepository.findByUserId(userId).orElseThrow(
+                () -> new CloneException(ErrorCode.USER_NOT_FOUND)
+        );
+        user.setImageUrl(imageUrl);
+        return userRepository.save(user);
+    }
 }
 
