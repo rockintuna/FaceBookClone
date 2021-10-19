@@ -21,5 +21,5 @@ public class PostResponseDto {
     private Integer likeCount;
     private Integer commentCount;
     private boolean isLiked;
-    private List<CommentResponseDto> commentResponseDtoList;
+    private List<CommentResponseDto> comments;
 }

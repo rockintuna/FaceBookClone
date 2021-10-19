@@ -25,10 +25,22 @@ public class PostController {
         Map<String, Object> result =
                 new HashMap<>(postService.getPostsOrderByCreatedAtDesc(page - 1, userDetails));
         String username = getFullUsernameIfExistOrGuest(userDetails);
+        String userImageUrl = getUserProfileImageFrom(userDetails);
         result.put("username", username);
+        result.put("userImageUrl", userImageUrl);
         result.put("statusCode", 200);
         result.put("responseMessage", "게시글 조회 성공");
         return result;
+    }
+
+    private String getUserProfileImageFrom(UserDetailsImpl userDetails) {
+        String userImageUrl;
+        if ( userDetails != null ) {
+            userImageUrl = userDetails.getUser().getImageUrl();
+        } else {
+            userImageUrl = null;
+        }
+        return userImageUrl;
     }
 
     private String getFullUsernameIfExistOrGuest(UserDetailsImpl userDetails) {

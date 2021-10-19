@@ -12,6 +12,7 @@ public class CommentResponseDto {
     private String content;
     private LocalDateTime createdAt;
     private String userId;
+    private String userImageUrl;
     private String firstName;
     private String lastName;
 }
