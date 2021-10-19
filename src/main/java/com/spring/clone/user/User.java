@@ -36,6 +36,8 @@ public class User {
     @Column(nullable = false)
     private LocalDate birth;
 
+    private String imageUrl;
+
     @Column(nullable = true)
     @Enumerated(value = EnumType.STRING)
     private Sex sex;
