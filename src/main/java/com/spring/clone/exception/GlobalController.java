@@ -53,4 +53,12 @@ public class GlobalController {
         result.put("statusCode", HttpStatus.NOT_FOUND.value());
         return result;
     }
+
+    @ExceptionHandler
+    public Map<String, Object> badArgumentExceptionHandler(BadArgumentException exception) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("responseMessage", exception.getMessage());
+        result.put("statusCode", HttpStatus.BAD_REQUEST.value());
+        return result;
+    }
 }
