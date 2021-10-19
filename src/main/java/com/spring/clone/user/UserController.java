@@ -5,6 +5,7 @@ import com.spring.clone.exception.ErrorCode;
 import com.spring.clone.sercurity.JwtTokenProvider;
 import com.spring.clone.sercurity.UserDetailsImpl;
 import com.spring.clone.user.dto.SignUpRequestDto;
+import com.spring.clone.user.dto.UserImageUrlRequestDto;
 import com.spring.clone.user.dto.UserRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -84,11 +85,11 @@ public class UserController {
     @PutMapping("/user/image")
     public Map<String, String> updateUserProfileImage(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestBody String imageUrl) throws CloneException {
+            @RequestBody UserImageUrlRequestDto requestDto) throws CloneException {
         if (userDetails == null) {
             throw new CloneException(ErrorCode.LOGIN_TOKEN_EXPIRE);
         }
-        User user = userService.updateUserProfileImage(imageUrl, userDetails.getUser().getUserId());
+        User user = userService.updateUserProfileImage(requestDto.getImageUrl(), userDetails.getUser().getUserId());
         Map<String, String> result = new HashMap<>();
 
         result.put("imageUrl", user.getImageUrl());
