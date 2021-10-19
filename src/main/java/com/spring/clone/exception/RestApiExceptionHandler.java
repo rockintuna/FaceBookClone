@@ -17,7 +17,7 @@ public class RestApiExceptionHandler {
         Map<String, Object> result = new HashMap<>();
 
         result.put("statusCode", ex.getErrorCode().getHttpStatus().value());
-        result.put("responseMessage", ex.getMessage());
+        result.put("responseMessage", ex.getErrorCode().getMessage());
         return result;
     }
 }
