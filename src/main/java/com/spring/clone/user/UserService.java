@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class UserService {
@@ -35,6 +37,9 @@ public class UserService {
 
         //가입 아이디 중복체크
         String userId = requestDto.getUserId();
+        if (!isValidEmail(userId)) {
+            throw new CloneException(ErrorCode.EMAIL_FORM_INVALID);
+        }
         Optional<User> found = userRepository.findByUserId(userId);
         if (found.isPresent()){
             throw new CloneException(ErrorCode.EMAIL_DUPLICATE);
@@ -52,6 +57,12 @@ public class UserService {
             throw new CloneException(ErrorCode.PASSWORD_ENTER);
         }
 
+        //이름확인
+        String firstName = requestDto.getFirstName();
+        if (firstName.isEmpty()) {
+            throw new CloneException(ErrorCode.PASSWORD_ENTER);
+        }
+
 
         //회원정보저장
         requestDto.setPwd(pwd);
@@ -61,6 +72,14 @@ public class UserService {
 
 
 
+    }
+
+    private boolean isValidEmail(String email) {
+        boolean err = false;
+        String regex = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(email);
+        if(m.matches()) { err = true; } return err;
     }
 
 
