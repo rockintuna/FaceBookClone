@@ -72,6 +72,20 @@ public class PostController {
         return result;
     }
 
+    @PostMapping("/post/{postId}/like")
+    public Map<String, Object> likePost(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable("postId") Long postId
+    ) {
+        User user = getUserByUserdetailsIfExist(userDetails);
+        Map<String, Object> result = new HashMap<>();
+        boolean isLiked = postService.toggleLikeInfo(postId, user);
+
+        result.put("isLiked", isLiked);
+        result.put("statusCode", 200);
+        result.put("responseMessage", "좋아요 변경 성공");
+        return result;
+    }
 
     private User getUserByUserdetailsIfExist(UserDetailsImpl userDetails) {
         User user;
