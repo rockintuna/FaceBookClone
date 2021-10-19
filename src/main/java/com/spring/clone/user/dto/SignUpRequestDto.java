@@ -20,7 +20,7 @@ public class SignUpRequestDto {
     private String firstName;
     private String lastName;
     private LocalDate birth;
-    private Sex sex;
+    private String sex;
     private boolean admin = false;
     private String adminToken = "";
 

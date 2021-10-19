@@ -1,6 +1,7 @@
 package com.spring.clone.user;
 
 import com.spring.clone.user.dto.SignUpRequestDto;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Setter
 @Getter
+@EqualsAndHashCode
 public class User {
 
     // ID가 자동으로 생성 및 증가합니다.
@@ -54,7 +56,7 @@ public class User {
     public User(SignUpRequestDto requestDto) {
         this.userId = requestDto.getUserId();
         this.firstName = requestDto.getFirstName();
-        this.sex = requestDto.getSex();
+        this.sex = Sex.typeOf(requestDto.getSex());
         this.lastName = requestDto.getLastName();
         this.pwd = requestDto.getPwd();
         this.birth = requestDto.getBirth();
