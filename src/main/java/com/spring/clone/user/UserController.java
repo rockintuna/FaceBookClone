@@ -75,8 +75,10 @@ public class UserController {
             throw new CloneException(ErrorCode.LOGIN_TOKEN_EXPIRE);
         }
         Map<String, String> result = new HashMap<>();
+
         result.put("userId", userDetails.getUser().getUserId());
-        result.put("result", "true");
+        result.put("responseMessage", "사용자 정보 전달");
+        result.put("statusCode", "200");
 
 
         return result;
