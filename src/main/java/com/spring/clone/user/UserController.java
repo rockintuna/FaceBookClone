@@ -53,7 +53,7 @@ public class UserController {
         User user = userService.login(requestDto);
 
         Map<String,Object> result =new HashMap<>();
-        result.put("token","Bearer"+ jwtTokenProvider.createToken(user.getUserId(), user.getUserId())); // "username" : {username}
+        result.put("token","Bearer "+ jwtTokenProvider.createToken(user.getUserId(), user.getUserId())); // "username" : {username}
         result.put("userId", user.getUserId());
 
         result.put("statusCode",200);
