@@ -3,7 +3,7 @@ package com.spring.clone.exception;
 import lombok.Getter;
 
 @Getter
-public class CloneException extends Exception {
+public class CloneException extends RuntimeException {
 
     private final ErrorCode errorCode;
 
