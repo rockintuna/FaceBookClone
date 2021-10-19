@@ -5,19 +5,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestControllerAdvice
 public class RestApiExceptionHandler {
 
-    @ExceptionHandler(value = { CloneException.class })
-    public ResponseEntity<Object> handleApiRequestException(CloneException ex) {
-        RestApiException restApiException = new RestApiException();
-        restApiException.setResult("fail");
-        restApiException.setHttpStatus(HttpStatus.OK);
-        restApiException.setErrorMessage(ex.getErrorCode().getMessage());
 
-        return new ResponseEntity(
-                restApiException,
-                HttpStatus.OK
-        );
+    @ExceptionHandler(value = { CloneException.class })
+    public Map<String, Object> handleApiRequestException(CloneException ex) {
+        Map<String, Object> result = new HashMap<>();
+
+        result.put("statusCode", ex.getErrorCode().getHttpStatus().value());
+        result.put("responseMessage", ex.getMessage());
+        return result;
     }
 }
