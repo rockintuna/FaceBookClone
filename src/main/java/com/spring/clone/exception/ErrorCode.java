@@ -21,6 +21,7 @@ public enum ErrorCode {
     PASSWORD_ENTER(BAD_REQUEST, "비밀번호를 입력해주세요"),
     ADMIN_PASSWORD_DISCORDANCE(BAD_REQUEST, "관리자 암호가 틀려 등록이 불가능합니다."),
 
+    FIRSTNAME_ENTER(BAD_REQUEST, "이름을 입력해주세요."),
     NICKNAME_DUPLICATE(BAD_REQUEST, "중복된 닉네임이 존재합니다."),
 
     LOGIN_TOKEN_EXPIRE(BAD_REQUEST, "로그인이 만료되었습니다. 재로그인 하세요!");

@@ -60,7 +60,7 @@ public class UserService {
         //이름확인
         String firstName = requestDto.getFirstName();
         if (firstName.isEmpty()) {
-            throw new CloneException(ErrorCode.PASSWORD_ENTER);
+            throw new CloneException(ErrorCode.FIRSTNAME_ENTER);
         }
 
 
