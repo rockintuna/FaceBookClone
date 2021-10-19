@@ -39,6 +39,14 @@ public class GlobalController {
     }
 
     @ExceptionHandler
+    public Map<String, Object> commentNotFoundExceptionHandler(CommentNotFoundException exception) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("responseMessage", exception.getMessage());
+        result.put("statusCode", HttpStatus.NOT_FOUND.value());
+        return result;
+    }
+
+    @ExceptionHandler
     public Map<String, Object> usernameNotFoundExceptionHandler(UsernameNotFoundException exception) {
         Map<String, Object> result = new HashMap<>();
         result.put("responseMessage", exception.getMessage());
