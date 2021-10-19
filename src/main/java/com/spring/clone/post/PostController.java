@@ -4,13 +4,11 @@ import com.spring.clone.post.dto.PostRequestDto;
 import com.spring.clone.sercurity.UserDetailsImpl;
 import com.spring.clone.user.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -26,9 +24,25 @@ public class PostController {
     ) {
         Map<String, Object> result =
                 new HashMap<>(postService.getPostsOrderByCreatedAtDesc(page - 1, userDetails));
+        String username = getFullUsernameIfExistOrGuest(userDetails);
+        result.put("username", username);
         result.put("statusCode", 200);
         result.put("responseMessage", "게시글 조회 성공");
         return result;
+    }
+
+    private String getFullUsernameIfExistOrGuest(UserDetailsImpl userDetails) {
+        String username;
+        if ( userDetails != null ) {
+            username = getFullUsernameFrom(userDetails);
+        } else {
+            username = "guest";
+        }
+        return username;
+    }
+
+    private String getFullUsernameFrom(UserDetailsImpl userDetails) {
+        return userDetails.getUser().getLastName()+ userDetails.getUser().getFirstName();
     }
 
     @PostMapping("/post")
