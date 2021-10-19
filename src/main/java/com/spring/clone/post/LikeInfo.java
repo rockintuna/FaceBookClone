@@ -24,4 +24,9 @@ public class LikeInfo {
     @ManyToOne
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
+
+    public LikeInfo(Post post, User user) {
+        this.post = post;
+        this.user = user;
+    }
 }
