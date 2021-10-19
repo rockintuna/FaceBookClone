@@ -11,16 +11,14 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class PostService {
 
     private final PostRepository postRepository;
+    private final LikeInfoRepository likeInfoRepository;
 
     public Map<String, Object> getPostsOrderByCreatedAtDesc(Integer page, UserDetails userDetails) {
         Page<Post> postPage = postRepository.findAllByOrderByCreatedAtDesc(PageRequest.of(page, 5));
@@ -63,6 +61,19 @@ public class PostService {
             postRepository.delete(post);
         } else {
             throw new AccessDeniedException("권한이 없습니다.");
+        }
+    }
+
+    public boolean toggleLikeInfo(Long postId, User user) {
+        Post post = getPostById(postId);
+        Optional<LikeInfo> likeInfo = likeInfoRepository.findByPostIdAndUserId(postId, user.getId());
+        if ( likeInfo.isPresent() ) {
+            likeInfoRepository.delete(likeInfo.get());
+            return false;
+        } else {
+            LikeInfo newLikeInfo = new LikeInfo(post, user);
+            likeInfoRepository.save(newLikeInfo);
+            return true;
         }
     }
 
