@@ -36,10 +36,12 @@ public class Comment extends Timestamped {
     }
 
     public static Comment of(String content, Post post, User user) {
+
         return new Comment(content, post, user);
     }
 
     public boolean isWritedBy(User user) {
+
         return this.user.equals(user);
     }
 }
