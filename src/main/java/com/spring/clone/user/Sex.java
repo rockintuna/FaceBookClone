@@ -13,9 +13,9 @@ public enum Sex {
         }
 
         public static Sex typeOf(String lower) {
-                if ( lower.equals("man") ) {
+                if ( lower.toLowerCase().equals("man") ) {
                         return Sex.MAN;
-                } else if ( lower.equals("woman") ) {
+                } else if ( lower.toLowerCase().equals("woman") ) {
                         return Sex.WOMAN;
                 } else {
                         throw new BadArgumentException("올바른 성별이 아닙니다.");

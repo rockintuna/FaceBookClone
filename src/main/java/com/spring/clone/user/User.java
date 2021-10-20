@@ -44,17 +44,6 @@ public class User {
 
 
 
-//
-//    public User(String userId, String pwd, Sex sex ,String firstName, String lastName, LocalDate birth) {
-//        this.userId = userId;
-//        this.pwd = pwd;
-//        this.firstName = firstName;
-//        this.lastName = lastName;
-//        this.birth = birth;
-//        this.sex = sex;
-//
-//    }
-
     public User(SignUpRequestDto requestDto) {
         this.userId = requestDto.getUserId();
         this.firstName = requestDto.getFirstName();
