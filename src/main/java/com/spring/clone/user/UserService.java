@@ -38,7 +38,7 @@ public class UserService {
         //비밀번호확인
         String password = requestDto.getPwd();
 
-        if (!password.isEmpty()) {
+        if ( password != null && !password.isEmpty() ) {
             if (!(password.length() >= 6 && password.length() <= 20)) {
                 throw new CloneException(ErrorCode.PASSWORD_PATTERN_LENGTH);
             }
