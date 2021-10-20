@@ -2,13 +2,16 @@ package com.spring.clone.user;
 
 import com.spring.clone.exception.CloneException;
 import com.spring.clone.exception.ErrorCode;
+import com.spring.clone.sercurity.UserDetailsImpl;
 import com.spring.clone.user.dto.SignUpRequestDto;
 import com.spring.clone.user.dto.UserRequestDto;
+import com.spring.clone.user.dto.UserResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -119,6 +122,11 @@ public class UserService {
         );
         user.setImageUrl(imageUrl);
         return userRepository.save(user);
+    }
+
+    public List<UserResponseDto> getUserDtoList(UserDetailsImpl userDetails) {
+        List<User> users = userRepository.findAll();
+        return UserResponseDto.listOf(users, userDetails);
     }
 }
 

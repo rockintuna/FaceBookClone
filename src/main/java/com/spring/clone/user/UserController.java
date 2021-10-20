@@ -7,11 +7,14 @@ import com.spring.clone.sercurity.UserDetailsImpl;
 import com.spring.clone.user.dto.SignUpRequestDto;
 import com.spring.clone.user.dto.UserImageUrlRequestDto;
 import com.spring.clone.user.dto.UserRequestDto;
+import com.spring.clone.user.dto.UserResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -70,7 +73,7 @@ public class UserController {
     @GetMapping("/user/info")
     public Map<String, String> loginCheck(@AuthenticationPrincipal UserDetailsImpl userDetails) throws CloneException {
         if (userDetails == null) {
-            throw new CloneException(ErrorCode.LOGIN_TOKEN_EXPIRE);
+            throw new AuthenticationServiceException("로그인이 필요합니다.");
         }
         Map<String, String> result = new HashMap<>();
 
@@ -83,12 +86,22 @@ public class UserController {
         return result;
     }
 
+    @GetMapping("/user/list")
+    public Map<String, Object> getUserDtoList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Map<String, Object> result = new HashMap<>();
+        List<UserResponseDto> users = userService.getUserDtoList(userDetails);
+        result.put("users", users);
+        result.put("responseMessage", "사용자 리스트 전달");
+        result.put("statusCode", "200");
+        return result;
+    }
+
     @PutMapping("/user/image")
     public Map<String, String> updateUserProfileImage(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestBody UserImageUrlRequestDto requestDto) throws CloneException {
         if (userDetails == null) {
-            throw new CloneException(ErrorCode.LOGIN_TOKEN_EXPIRE);
+            throw new AuthenticationServiceException("로그인이 필요합니다.");
         }
         User user = userService.updateUserProfileImage(requestDto.getImageUrl(), userDetails.getUser().getUserId());
         Map<String, String> result = new HashMap<>();
