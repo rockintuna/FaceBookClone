@@ -35,20 +35,6 @@ public class UserService {
 
     public User registerUser(SignUpRequestDto requestDto) throws CloneException {
 
-        // 패스워드 암호화
-        String pwd = passwordEncoder.encode(requestDto.getPwd());
-
-        //가입 아이디 중복체크
-        String userId = requestDto.getUserId();
-        if (!isValidEmail(userId)) {
-            throw new CloneException(ErrorCode.EMAIL_FORM_INVALID);
-        }
-        Optional<User> found = userRepository.findByUserId(userId);
-        if (found.isPresent()){
-            throw new CloneException(ErrorCode.EMAIL_DUPLICATE);
-        }
-
-
         //비밀번호확인
         String password = requestDto.getPwd();
 
@@ -60,11 +46,24 @@ public class UserService {
             throw new CloneException(ErrorCode.PASSWORD_ENTER);
         }
 
+        //가입 아이디 중복체크
+        String userId = requestDto.getUserId();
+        if (!isValidEmail(userId)) {
+            throw new CloneException(ErrorCode.EMAIL_FORM_INVALID);
+        }
+        Optional<User> found = userRepository.findByUserId(userId);
+        if (found.isPresent()){
+            throw new CloneException(ErrorCode.EMAIL_DUPLICATE);
+        }
+
         //이름확인
         String firstName = requestDto.getFirstName();
         if (firstName.isEmpty()) {
             throw new CloneException(ErrorCode.FIRSTNAME_ENTER);
         }
+
+        // 패스워드 암호화
+        String pwd = passwordEncoder.encode(requestDto.getPwd());
 
 
         //회원정보저장
