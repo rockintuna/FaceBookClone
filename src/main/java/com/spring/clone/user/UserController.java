@@ -67,7 +67,7 @@ public class UserController {
     }
 
     // jwt refresh토큰 이 없어서 확인차생성 // 새로고침하면 그냥 자동으로 로그아웃됨
-    @GetMapping("/auth")
+    @GetMapping("/user/info")
     public Map<String, String> loginCheck(@AuthenticationPrincipal UserDetailsImpl userDetails) throws CloneException {
         if (userDetails == null) {
             throw new CloneException(ErrorCode.LOGIN_TOKEN_EXPIRE);
@@ -75,10 +75,11 @@ public class UserController {
         Map<String, String> result = new HashMap<>();
 
         result.put("userId", userDetails.getUser().getUserId());
+        result.put("firstName", userDetails.getUser().getFirstName());
+        result.put("lastName", userDetails.getUser().getLastName());
+        result.put("imageUrl", userDetails.getUser().getImageUrl());
         result.put("responseMessage", "사용자 정보 전달");
         result.put("statusCode", "200");
-
-
         return result;
     }
 
