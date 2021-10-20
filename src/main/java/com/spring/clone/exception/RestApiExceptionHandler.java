@@ -13,11 +13,11 @@ public class RestApiExceptionHandler {
 
 
     @ExceptionHandler(value = { CloneException.class })
-    public Map<String, Object> handleApiRequestException(CloneException ex) {
+    public ResponseEntity<Map<String, Object>> handleApiRequestException(CloneException ex) {
         Map<String, Object> result = new HashMap<>();
 
         result.put("statusCode", ex.getErrorCode().getHttpStatus().value());
         result.put("responseMessage", ex.getErrorCode().getMessage());
-        return result;
+        return new ResponseEntity<>(result, ex.getErrorCode().getHttpStatus());
     }
 }
