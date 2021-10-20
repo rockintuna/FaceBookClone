@@ -99,7 +99,7 @@ public class Post extends Timestamped {
     private List<CommentResponseDto> addCommentsDtoListFrom() {
         List<CommentResponseDto> responseDtoList = new ArrayList<>();
         comments.stream()
-                .sorted(Comparator.comparing(Timestamped::getCreatedAt).reversed())
+                .sorted(Comparator.comparing(Timestamped::getCreatedAt))
                 .forEach(comment -> commentToResponseDto(responseDtoList, comment));
         return responseDtoList;
     }
