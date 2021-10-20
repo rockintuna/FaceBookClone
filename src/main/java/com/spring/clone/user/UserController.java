@@ -7,11 +7,14 @@ import com.spring.clone.sercurity.UserDetailsImpl;
 import com.spring.clone.user.dto.SignUpRequestDto;
 import com.spring.clone.user.dto.UserImageUrlRequestDto;
 import com.spring.clone.user.dto.UserRequestDto;
+import com.spring.clone.user.dto.UserResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -51,7 +54,7 @@ public class UserController {
         User user = userService.login(requestDto);
 
         Map<String,Object> result =new HashMap<>();
-        result.put("token","Bearer "+ jwtTokenProvider.createToken(user.getUserId(), user.getUserId())); // "username" : {username}
+        result.put("token",jwtTokenProvider.createToken(user.getUserId(), user.getUserId())); // "username" : {username}
         result.put("userId", user.getUserId());
 
         result.put("statusCode",200);
@@ -67,18 +70,29 @@ public class UserController {
     }
 
     // jwt refresh토큰 이 없어서 확인차생성 // 새로고침하면 그냥 자동으로 로그아웃됨
-    @GetMapping("/auth")
+    @GetMapping("/user/info")
     public Map<String, String> loginCheck(@AuthenticationPrincipal UserDetailsImpl userDetails) throws CloneException {
         if (userDetails == null) {
-            throw new CloneException(ErrorCode.LOGIN_TOKEN_EXPIRE);
+            throw new AuthenticationServiceException("로그인이 필요합니다.");
         }
         Map<String, String> result = new HashMap<>();
 
         result.put("userId", userDetails.getUser().getUserId());
+        result.put("firstName", userDetails.getUser().getFirstName());
+        result.put("lastName", userDetails.getUser().getLastName());
+        result.put("imageUrl", userDetails.getUser().getImageUrl());
         result.put("responseMessage", "사용자 정보 전달");
         result.put("statusCode", "200");
+        return result;
+    }
 
-
+    @GetMapping("/user/list")
+    public Map<String, Object> getUserDtoList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Map<String, Object> result = new HashMap<>();
+        List<UserResponseDto> users = userService.getUserDtoList(userDetails);
+        result.put("users", users);
+        result.put("responseMessage", "사용자 리스트 전달");
+        result.put("statusCode", "200");
         return result;
     }
 
@@ -87,7 +101,7 @@ public class UserController {
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestBody UserImageUrlRequestDto requestDto) throws CloneException {
         if (userDetails == null) {
-            throw new CloneException(ErrorCode.LOGIN_TOKEN_EXPIRE);
+            throw new AuthenticationServiceException("로그인이 필요합니다.");
         }
         User user = userService.updateUserProfileImage(requestDto.getImageUrl(), userDetails.getUser().getUserId());
         Map<String, String> result = new HashMap<>();

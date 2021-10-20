@@ -2,13 +2,16 @@ package com.spring.clone.user;
 
 import com.spring.clone.exception.CloneException;
 import com.spring.clone.exception.ErrorCode;
+import com.spring.clone.sercurity.UserDetailsImpl;
 import com.spring.clone.user.dto.SignUpRequestDto;
 import com.spring.clone.user.dto.UserRequestDto;
+import com.spring.clone.user.dto.UserResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -32,8 +35,16 @@ public class UserService {
 
     public User registerUser(SignUpRequestDto requestDto) throws CloneException {
 
-        // 패스워드 암호화
-        String pwd = passwordEncoder.encode(requestDto.getPwd());
+        //비밀번호확인
+        String password = requestDto.getPwd();
+
+        if ( password != null && !password.isEmpty() ) {
+            if (!(password.length() >= 6 && password.length() <= 20)) {
+                throw new CloneException(ErrorCode.PASSWORD_PATTERN_LENGTH);
+            }
+        } else {
+            throw new CloneException(ErrorCode.PASSWORD_ENTER);
+        }
 
         //가입 아이디 중복체크
         String userId = requestDto.getUserId();
@@ -45,23 +56,14 @@ public class UserService {
             throw new CloneException(ErrorCode.EMAIL_DUPLICATE);
         }
 
-
-        //비밀번호확인
-        String password = requestDto.getPwd();
-
-        if (!password.isEmpty()) {
-            if (!(password.length() >= 6 && password.length() <= 20)) {
-                throw new CloneException(ErrorCode.PASSWORD_PATTERN_LENGTH);
-            }
-        } else {
-            throw new CloneException(ErrorCode.PASSWORD_ENTER);
-        }
-
         //이름확인
         String firstName = requestDto.getFirstName();
         if (firstName.isEmpty()) {
             throw new CloneException(ErrorCode.FIRSTNAME_ENTER);
         }
+
+        // 패스워드 암호화
+        String pwd = passwordEncoder.encode(requestDto.getPwd());
 
 
         //회원정보저장
@@ -120,6 +122,11 @@ public class UserService {
         );
         user.setImageUrl(imageUrl);
         return userRepository.save(user);
+    }
+
+    public List<UserResponseDto> getUserDtoList(UserDetailsImpl userDetails) {
+        List<User> users = userRepository.findAll();
+        return UserResponseDto.listOf(users, userDetails);
     }
 }
 

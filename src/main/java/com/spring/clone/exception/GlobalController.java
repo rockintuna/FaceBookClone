@@ -15,50 +15,50 @@ import java.util.Map;
 public class GlobalController {
 
     @ExceptionHandler
-    public Map<String, Object> accessDeniedExceptionHandler(AccessDeniedException exception) {
+    public ResponseEntity<Map<String, Object>> accessDeniedExceptionHandler(AccessDeniedException exception) {
         Map<String, Object> result = new HashMap<>();
         result.put("responseMessage", exception.getMessage());
         result.put("statusCode", HttpStatus.FORBIDDEN.value());
-        return result;
+        return new ResponseEntity<>(result, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler
-    public Map<String, Object> authenticationServiceExceptionHandler(AuthenticationServiceException exception) {
+    public ResponseEntity<Map<String, Object>> authenticationServiceExceptionHandler(AuthenticationServiceException exception) {
         Map<String, Object> result = new HashMap<>();
         result.put("responseMessage", exception.getMessage());
         result.put("statusCode", HttpStatus.UNAUTHORIZED.value());
-        return result;
+        return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler
-    public Map<String, Object> postNotFoundExceptionHandler(PostNotFoundException exception) {
+    public ResponseEntity<Map<String, Object>> postNotFoundExceptionHandler(PostNotFoundException exception) {
         Map<String, Object> result = new HashMap<>();
         result.put("responseMessage", exception.getMessage());
         result.put("statusCode", HttpStatus.NOT_FOUND.value());
-        return result;
+        return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
-    public Map<String, Object> commentNotFoundExceptionHandler(CommentNotFoundException exception) {
+    public ResponseEntity<Map<String, Object>> commentNotFoundExceptionHandler(CommentNotFoundException exception) {
         Map<String, Object> result = new HashMap<>();
         result.put("responseMessage", exception.getMessage());
         result.put("statusCode", HttpStatus.NOT_FOUND.value());
-        return result;
+        return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
-    public Map<String, Object> usernameNotFoundExceptionHandler(UsernameNotFoundException exception) {
+    public ResponseEntity<Map<String, Object>> usernameNotFoundExceptionHandler(UsernameNotFoundException exception) {
         Map<String, Object> result = new HashMap<>();
         result.put("responseMessage", exception.getMessage());
         result.put("statusCode", HttpStatus.NOT_FOUND.value());
-        return result;
+        return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
-    public Map<String, Object> badArgumentExceptionHandler(BadArgumentException exception) {
+    public ResponseEntity<Map<String, Object>> badArgumentExceptionHandler(BadArgumentException exception) {
         Map<String, Object> result = new HashMap<>();
         result.put("responseMessage", exception.getMessage());
         result.put("statusCode", HttpStatus.BAD_REQUEST.value());
-        return result;
+        return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
     }
 }
