@@ -45,11 +45,11 @@ public class PostService {
         return postRepository.save(newPost);
     }
 
-    public void editPost(Long postId, PostRequestDto requestDto, User user) {
+    public Post editPost(Long postId, PostRequestDto requestDto, User user) {
         Post post = getPostById(postId);
         if ( post.isWritedBy(user) ) {
             post.update(requestDto);
-            postRepository.save(post);
+            return postRepository.save(post);
         } else {
             throw new AccessDeniedException("권한이 없습니다.");
         }
