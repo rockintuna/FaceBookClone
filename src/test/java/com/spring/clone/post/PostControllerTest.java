@@ -1,5 +1,7 @@
 package com.spring.clone.post;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spring.clone.exception.PostNotFoundException;
 import com.spring.clone.post.dto.PostRequestDto;
 import com.spring.clone.post.dto.PostResponseDto;
 import com.spring.clone.sercurity.UserDetailsImpl;
@@ -15,6 +17,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.http.MediaType;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -24,9 +32,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,20 +51,23 @@ class PostControllerTest {
     @Autowired
     private MockMvc mvc;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @MockBean
     private PostService postService;
 
     private List<Post> mockPostList = new ArrayList<>();
     User testUser;
-    UserDetailsImpl userDetails;
+    UserDetailsImpl mockUserDetails;
+    SecurityContext securityContext;
 
     @BeforeEach
     private void beforeEach() {
-
         SignUpRequestDto requestDto = new SignUpRequestDto(
                 "tester@test.com","password","tester","test", LocalDate.now(),"man",false,null);
         testUser = new User(requestDto);
-        userDetails = new UserDetailsImpl(testUser);
+        mockUserDetails = new UserDetailsImpl(testUser);
         //given
         mockPostList.add(Post.of(
                 new PostRequestDto("test content 1","/image/img.img"), testUser));
@@ -68,6 +84,12 @@ class PostControllerTest {
 
     }
 
+    private void authenticated() {
+        Authentication authentication = new UsernamePasswordAuthenticationToken(mockUserDetails, "", mockUserDetails.getAuthorities());
+        securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(authentication);
+    }
+
     @Nested
     @DisplayName("Get 요청")
     class HttpGet {
@@ -75,11 +97,50 @@ class PostControllerTest {
         @DisplayName("Get 요청 성공")
         class GetSuccess {
             @Test
-            @WithUserDetails
+            @DisplayName("Get /post")
             void getPostsOrderByCreatedAtDesc() throws Exception {
                 //given
-                Map<String, Object> result = new HashMap<>();
-                List<PostResponseDto> responseDtoList = new ArrayList<>();
+                authenticated();
+                Map < String, Object > result = new HashMap<>();
+                List<PostResponseDto>responseDtoList = new ArrayList<>();
+                mockPostList.stream().map(post -> post.toPostResponseDto(mockUserDetails))
+                        .forEach(responseDtoList::add);
+                result.put("page", 1);
+                result.put("totalPage", 2);
+                result.put("posts", responseDtoList);
+
+                given(postService.getPostsOrderByCreatedAtDesc(0, mockUserDetails))
+                        .willReturn(result);
+
+                //when
+                mvc.perform(get("/post")
+                                .param("page", "1"))
+                        .andDo(print())
+                        //then
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.totalPage").value(2))
+                        .andExpect(jsonPath("$.page").value(1))
+                        .andExpect(jsonPath("$.posts[0].content").value("test content 1"))
+                        .andExpect(jsonPath("$.posts[0].imageUrl").value("/image/img.img"))
+                        .andExpect(jsonPath("$.posts[0].firstName").value("tester"))
+                        .andExpect(jsonPath("$.posts[0].lastName").value("test"))
+                        .andExpect(jsonPath("$.posts[0].likeCount").value(0))
+                        .andExpect(jsonPath("$.posts[0].commentCount").value(0))
+                        .andExpect(jsonPath("$.posts[0].liked").value(false))
+                        .andExpect(jsonPath("$.userImageUrl").doesNotExist())
+                        .andExpect(jsonPath("$.statusCode").value(200))
+                        .andExpect(jsonPath("$.username").value("testtester"));
+
+                verify(postService).getPostsOrderByCreatedAtDesc(0, mockUserDetails);
+            }
+
+            @Test
+            @WithUserDetails
+            @DisplayName("로그인하지않은 사용자")
+            void getPostsOrderByCreatedAtDescWithNoLogin() throws Exception {
+                //given
+                Map < String, Object > result = new HashMap<>();
+                List<PostResponseDto>responseDtoList = new ArrayList<>();
                 mockPostList.stream().map(post -> post.toPostResponseDto(null))
                         .forEach(responseDtoList::add);
                 result.put("page", 1);
@@ -114,6 +175,21 @@ class PostControllerTest {
         @Nested
         @DisplayName("Get 요청 실패")
         class GetFail {
+            @Test
+            @DisplayName("'page' parameter 없음")
+            void getPostsOrderByCreatedAtDesc() throws Exception {
+                //given
+                authenticated();
+
+                //when
+                mvc.perform(get("/post"))
+                        .andDo(print())
+
+                        //then
+                        .andExpect(status().isBadRequest());
+
+                verify(postService, never()).getPostsOrderByCreatedAtDesc(0, null);
+            }
         }
     }
     @Nested
@@ -123,16 +199,147 @@ class PostControllerTest {
         @DisplayName("Post 요청 성공")
         class PostSuccess {
             @Test
-            void addPost() {
+            @DisplayName("Post /post")
+            void addPost() throws Exception {
+                //given
+                authenticated();
+                PostRequestDto requestDto = new PostRequestDto("test content", "/test.img");
+                String json = objectMapper.writeValueAsString(requestDto);
 
+                //when
+                mvc.perform(post("/post")
+                                .with(csrf())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json))
+                        .andDo(print())
+
+                        //then
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.statusCode").value(200));
+
+                verify(postService).addPost(any(PostRequestDto.class), eq(testUser));
             }
             @Test
-            void likePost() {
+            @DisplayName("Post /post/{postId}/like")
+            void likePost() throws Exception {
+                //given
+                authenticated();
+                given(postService.toggleLikeInfo(1L, testUser)).willReturn(true);
+
+                //when
+                mvc.perform(post("/post/1/like")
+                                .with(csrf()))
+
+                        //then
+                        .andDo(print())
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.isLiked").value(true))
+                        .andExpect(jsonPath("$.statusCode").value(200));
+
+                verify(postService).toggleLikeInfo(1L, testUser);
             }
         }
         @Nested
         @DisplayName("Post 요청 실패")
         class PostFail {
+            @Test
+            @DisplayName("media type 미정의")
+            void addPost() throws Exception {
+                //given
+                authenticated();
+                PostRequestDto requestDto = new PostRequestDto("test content", "/test.img");
+                String json = objectMapper.writeValueAsString(requestDto);
+
+                //when
+                mvc.perform(post("/post")
+                                .with(csrf())
+                                .content(json))
+                        .andDo(print())
+
+                        //then
+                        .andExpect(status().isUnsupportedMediaType());
+
+                verify(postService, never()).addPost(any(), any());
+            }
+            @Test
+            @DisplayName("요청 데이터 없음")
+            void addPostNoData() throws Exception {
+                //given
+                authenticated();
+
+                //when
+                mvc.perform(post("/post")
+                                .with(csrf())
+                                .contentType(MediaType.APPLICATION_JSON))
+                        .andDo(print())
+
+                        //then
+                        .andExpect(status().isBadRequest());
+
+                verify(postService, never()).addPost(any(), any());
+            }
+
+            @Test
+            @WithUserDetails
+            @DisplayName("로그인하지 않은 사용자")
+            void addPostNoLogin() throws Exception {
+                //given
+                PostRequestDto requestDto = new PostRequestDto("test content", "/test.img");
+                String json = objectMapper.writeValueAsString(requestDto);
+
+                //when
+                mvc.perform(post("/post")
+                                .with(csrf())
+                                .content(json)
+                                .contentType(MediaType.APPLICATION_JSON))
+                        .andDo(print())
+
+                        //then
+                        .andExpect(status().isUnauthorized())
+                        .andExpect(jsonPath("$.statusCode").value(401));
+
+                verify(postService, never()).addPost(any(), any());
+            }
+
+            @Test
+            @WithUserDetails
+            @DisplayName("로그인하지 않은 사용자 like")
+            void likePostWithNoLogin() throws Exception {
+                //given
+
+                //when
+                mvc.perform(post("/post/1/like")
+                                .with(csrf()))
+                        .andDo(print())
+
+                        //then
+                        .andExpect(status().isUnauthorized())
+                        .andExpect(jsonPath("$.statusCode").value(401));
+
+
+                verify(postService, never()).toggleLikeInfo(1L, testUser);
+            }
+
+            @Test
+            @DisplayName("없는 게시글에 like")
+            void likePost() throws Exception {
+                //given
+                authenticated();
+                given(postService.toggleLikeInfo(1L, testUser))
+                        .willThrow(PostNotFoundException.class);
+
+                //when
+                mvc.perform(post("/post/1/like")
+                                .with(csrf()))
+                        .andDo(print())
+
+                        //then
+                        .andExpect(status().isNotFound())
+                        .andExpect(jsonPath("$.statusCode").value(404));
+
+
+                verify(postService).toggleLikeInfo(1L, testUser);
+            }
         }
     }
     @Nested
@@ -142,27 +349,198 @@ class PostControllerTest {
         @DisplayName("Put 요청 성공")
         class PutSuccess {
             @Test
-            void editPost() {
+            @DisplayName("Put /post/{postId}")
+            void editPost() throws Exception {
+                //given
+                PostRequestDto requestDto = new PostRequestDto("test content", "/test.img");
+                String json = objectMapper.writeValueAsString(requestDto);
+                authenticated();
+
+                //when
+                mvc.perform(put("/post/1")
+                                .with(csrf())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json))
+                        .andDo(print())
+
+                        //then
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.statusCode").value(200));
+
+                verify(postService).editPost(eq(1L), any(PostRequestDto.class), eq(testUser));
             }
         }
         @Nested
         @DisplayName("Put 요청 실패")
         class PutFail {
+            @Test
+            @WithUserDetails
+            @DisplayName("로그인하지않은 사용자")
+            void editPostNoLogin() throws Exception {
+                //given
+                PostRequestDto requestDto = new PostRequestDto("test content", "/test.img");
+                String json = objectMapper.writeValueAsString(requestDto);
+
+                //when
+                mvc.perform(put("/post/1")
+                                .with(csrf())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json))
+                        .andDo(print())
+
+                        //then
+                        .andExpect(status().isUnauthorized())
+                        .andExpect(jsonPath("$.statusCode").value(401));
+
+                verify(postService, never()).editPost(any(), any(), any());
+            }
+
+            @Test
+            @DisplayName("media type 미정의")
+            void editPostNoMediaType() throws Exception {
+                //given
+                PostRequestDto requestDto = new PostRequestDto("test content", "/test.img");
+                String json = objectMapper.writeValueAsString(requestDto);
+                authenticated();
+
+                //when
+                mvc.perform(put("/post/1")
+                                .with(csrf())
+                                .content(json))
+                        .andDo(print())
+
+                        //then
+                        .andExpect(status().isUnsupportedMediaType());
+
+                verify(postService, never()).editPost(any(), any(), any());
+            }
+
+            @Test
+            @DisplayName("요청 데이터 없음")
+            void editPostNoData() throws Exception {
+                //given
+                authenticated();
+
+                //when
+                mvc.perform(put("/post/1")
+                                .with(csrf())
+                                .contentType(MediaType.APPLICATION_JSON))
+                        .andDo(print())
+
+                        //then
+                        .andExpect(status().isBadRequest());
+
+                verify(postService, never()).editPost(any(), any(), any());
+            }
+
+            @Test
+            @DisplayName("권한 없음")
+            void editPostNoPermission() throws Exception {
+                //given
+                PostRequestDto requestDto = new PostRequestDto("test content", "/test.img");
+                String json = objectMapper.writeValueAsString(requestDto);
+                authenticated();
+                willThrow(AccessDeniedException.class).given(postService)
+                                .editPost(eq(1L), any(PostRequestDto.class), eq(testUser));
+
+                //when
+                mvc.perform(put("/post/1")
+                                .with(csrf())
+                                .content(json)
+                                .contentType(MediaType.APPLICATION_JSON))
+                        .andDo(print())
+
+                        //then
+                        .andExpect(status().isForbidden());
+
+                verify(postService).editPost(eq(1L), any(PostRequestDto.class), eq(testUser));
+            }
         }
     }
     @Nested
     @DisplayName("Delete 요청")
     class HttpDelete {
         @Nested
-        @DisplayName("Put 요청 성공")
+        @DisplayName("Delete 요청 성공")
         class DeleteSuccess {
             @Test
-            void deletePost() {
+            @DisplayName("Delete /post/{postId}")
+            void deletePost() throws Exception {
+                //given
+                authenticated();
+
+                //when
+                mvc.perform(delete("/post/1")
+                                .with(csrf()))
+                        .andDo(print())
+
+                        //then
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.statusCode").value(200));
+
+                verify(postService).deletePost(1L, testUser);
             }
         }
         @Nested
         @DisplayName("Delete 요청 실패")
         class DeleteFail {
+            @Test
+            @WithUserDetails
+            @DisplayName("로그인하지않은 사용자")
+            void deletePostWithNoLogin() throws Exception {
+                //given
+
+                //when
+                mvc.perform(delete("/post/1")
+                                .with(csrf()))
+                        .andDo(print())
+
+                        //then
+                        .andExpect(status().isUnauthorized())
+                        .andExpect(jsonPath("$.statusCode").value(401));
+
+                verify(postService, never()).deletePost(any(), any());
+            }
+
+            @Test
+            @DisplayName("없는 게시글 삭제")
+            void deletePostNotExist() throws Exception {
+                //given
+                authenticated();
+                willThrow(PostNotFoundException.class)
+                        .given(postService).deletePost(1L, testUser);
+
+                //when
+                mvc.perform(delete("/post/1")
+                                .with(csrf()))
+                        .andDo(print())
+
+                        //then
+                        .andExpect(status().isNotFound())
+                        .andExpect(jsonPath("$.statusCode").value(404));
+
+                verify(postService).deletePost(1L, testUser);
+            }
+
+            @Test
+            @DisplayName("권한 없음")
+            void deletePostNotPermission() throws Exception {
+                //given
+                authenticated();
+                willThrow(AccessDeniedException.class)
+                        .given(postService).deletePost(1L, testUser);
+
+                //when
+                mvc.perform(delete("/post/1")
+                                .with(csrf()))
+                        .andDo(print())
+
+                        //then
+                        .andExpect(status().isForbidden())
+                        .andExpect(jsonPath("$.statusCode").value(403));
+
+                verify(postService).deletePost(1L, testUser);
+            }
         }
     }
 }
