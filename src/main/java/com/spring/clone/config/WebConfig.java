@@ -23,8 +23,6 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowCredentials(true);
     }
 
-
-
     @Bean
     public MappingJackson2HttpMessageConverter jsonEscapeConverter() {
         ObjectMapper copy = objectMapper.copy();
