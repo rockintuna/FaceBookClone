@@ -51,6 +51,7 @@ public class User {
         this.lastName = requestDto.getLastName();
         this.pwd = requestDto.getPwd();
         this.birth = requestDto.getBirth();
+        this.imageUrl = "https://district93.org/wp-content/uploads/2017/07/icon-user-default.png";
     }
 
 
