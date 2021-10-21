@@ -27,6 +27,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -257,7 +258,7 @@ class PostControllerTest {
         class PostFail {
             @Test
             @DisplayName("media type 미정의")
-            void addPost() throws Exception {
+            void addPostInvalidMediaType() throws Exception {
                 //given
                 authenticated();
                 PostRequestDto requestDto = new PostRequestDto("test content", "/test.img");
@@ -366,7 +367,11 @@ class PostControllerTest {
             void editPost() throws Exception {
                 //given
                 PostRequestDto requestDto = new PostRequestDto("test content", "/test.img");
+                Post post = new Post(requestDto.getContent(), requestDto.getImageUrl(), testUser);
+                post.setCreatedAt(LocalDateTime.now());
                 String json = objectMapper.writeValueAsString(requestDto);
+                given(postService.editPost(eq(1L), any(), eq(testUser)))
+                        .willReturn(post);
                 authenticated();
 
                 //when
