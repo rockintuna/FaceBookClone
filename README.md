@@ -6,6 +6,7 @@
 
 #### Project Name
 F : FaceBook의 F라도 따라가자
+
 #### Objective
 1. Frontend와 Backend 다른환경에서의 연동(CORS)
 2. 회원가입 & Spring에서 JWT 방식의 로그인
@@ -51,8 +52,8 @@ API설계
 <summary>
 Diagrams
 </summary>
- <div style="margin: 0px 0px 0px 300px" >
-<img src= "https://media.vlpt.us/images/junseokoo/post/b2852b8c-d5b8-46e9-ad48-7809a33ee04e/%EC%BA%A1%EC%B2%98.PNG">
+ <div>
+<img src= "https://media.vlpt.us/images/junseokoo/post/982e77ed-0fde-4d5b-8dcd-3ddfed639e69/image.png">
  </div></details>
 
 
@@ -64,7 +65,7 @@ Diagrams
 ## CORS
 + Cross-origin resource sharing(CORS)는 최초에 리소스를 제공한 출처(origin)와 다른 출처의 리소스를 요청하는 경우(cross-origin 요청), 특정 HTTP header를 사용하여 웹 애플리케이션의 cross-origin 요청을 브라우저가 제한적으로 허용하는 정책입니다.
 + 프론트 측에서 CORS를 전부 허용해달라고 요청을 했었습니다. 그래서 Access-Control-Allow-Orign 에 *을 줬는데 CORS에러가 떠서 
-Webconfig에 있는 addCorsMappings 를 WebSecurityConfig에 옮겨서도 해봤지만 똑같이 CORS에러가 떠서 Access-Control-Allow-Origin에대해 구글링해서 해답을 찾았다 그이유는 아래와 같습니다.
+Webconfig에 있는 addCorsMappings 를 WebSecurityConfig에 옮겨서도 해봤지만 똑같이 CORS에러가 떠서 Access-Control-Allow-Origin에대해 구글링해서 해답을 찾았습니다. 그이유는 아래와 같습니다.
 + Access-Control-Allow-Origin: *와 Access-Control-Allow-Credentials: true는 함께 사용할 수 없다.
   CORS는 응답이 Access-Control-Allow-Credentials: true 을 가질 경우, Access-Controll-Allow-Origin의 값으로 *를 사용하지 못하게 막고 있습니다.
 + Access-Control-Allow-Credentials: true를 사용하는 경우는 사용자 인증이 필요한 리소스 접근이 필요한 경우인데, 만약 Access-Control-Allow-Origin: *를 허용한다면, CSRF 공격에 매우 취약해져 악의적인 사용자가 인증이 필요한 리소스를 마음대로 접근할 수 있습니다. 그렇기 때문에 CORS 정책에서 아예 동작하지 않도록 막아버린 것입니다.
