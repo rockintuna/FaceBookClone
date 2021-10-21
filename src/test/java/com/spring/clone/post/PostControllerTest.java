@@ -106,21 +106,16 @@ class PostControllerTest {
                 List<PostResponseDto>responseDtoList = new ArrayList<>();
                 mockPostList.stream().map(post -> post.toPostResponseDto(mockUserDetails))
                         .forEach(responseDtoList::add);
-                result.put("page", 1);
-                result.put("totalPage", 2);
                 result.put("posts", responseDtoList);
 
-                given(postService.getPostsOrderByCreatedAtDesc(0, mockUserDetails))
+                given(postService.getPostsOrderByCreatedAtDesc(mockUserDetails))
                         .willReturn(result);
 
                 //when
-                mvc.perform(get("/post")
-                                .param("page", "1"))
+                mvc.perform(get("/post"))
                         .andDo(print())
                         //then
                         .andExpect(status().isOk())
-                        .andExpect(jsonPath("$.totalPage").value(2))
-                        .andExpect(jsonPath("$.page").value(1))
                         .andExpect(jsonPath("$.posts[0].content").value("test content 1"))
                         .andExpect(jsonPath("$.posts[0].imageUrl").value("/image/img.img"))
                         .andExpect(jsonPath("$.posts[0].firstName").value("tester"))
@@ -132,7 +127,7 @@ class PostControllerTest {
                         .andExpect(jsonPath("$.statusCode").value(200))
                         .andExpect(jsonPath("$.username").value("testtester"));
 
-                verify(postService).getPostsOrderByCreatedAtDesc(0, mockUserDetails);
+                verify(postService).getPostsOrderByCreatedAtDesc(mockUserDetails);
             }
 
             @Test
@@ -144,21 +139,16 @@ class PostControllerTest {
                 List<PostResponseDto>responseDtoList = new ArrayList<>();
                 mockPostList.stream().map(post -> post.toPostResponseDto(null))
                         .forEach(responseDtoList::add);
-                result.put("page", 1);
-                result.put("totalPage", 2);
                 result.put("posts", responseDtoList);
 
-                given(postService.getPostsOrderByCreatedAtDesc(0, null))
+                given(postService.getPostsOrderByCreatedAtDesc(null))
                         .willReturn(result);
 
                 //when
-                mvc.perform(get("/post")
-                                .param("page", "1"))
+                mvc.perform(get("/post"))
                         .andDo(print())
                         //then
                         .andExpect(status().isOk())
-                        .andExpect(jsonPath("$.totalPage").value(2))
-                        .andExpect(jsonPath("$.page").value(1))
                         .andExpect(jsonPath("$.posts[0].content").value("test content 1"))
                         .andExpect(jsonPath("$.posts[0].imageUrl").value("/image/img.img"))
                         .andExpect(jsonPath("$.posts[0].firstName").value("tester"))
@@ -170,26 +160,7 @@ class PostControllerTest {
                         .andExpect(jsonPath("$.statusCode").value(200))
                         .andExpect(jsonPath("$.username").value("guest"));
 
-                verify(postService).getPostsOrderByCreatedAtDesc(0, null);
-            }
-        }
-        @Nested
-        @DisplayName("Get 요청 실패")
-        class GetFail {
-            @Test
-            @DisplayName("'page' parameter 없음")
-            void getPostsOrderByCreatedAtDesc() throws Exception {
-                //given
-                authenticated();
-
-                //when
-                mvc.perform(get("/post"))
-                        .andDo(print())
-
-                        //then
-                        .andExpect(status().isBadRequest());
-
-                verify(postService, never()).getPostsOrderByCreatedAtDesc(0, null);
+                verify(postService).getPostsOrderByCreatedAtDesc(null);
             }
         }
     }
