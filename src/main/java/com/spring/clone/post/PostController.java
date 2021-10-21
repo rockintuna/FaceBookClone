@@ -1,6 +1,8 @@
 package com.spring.clone.post;
 
+import com.spring.clone.post.dto.PostCreateResponseDto;
 import com.spring.clone.post.dto.PostRequestDto;
+import com.spring.clone.post.dto.PostResponseDto;
 import com.spring.clone.sercurity.UserDetailsImpl;
 import com.spring.clone.user.User;
 import lombok.RequiredArgsConstructor;
@@ -63,8 +65,9 @@ public class PostController {
             @RequestBody PostRequestDto requestDto) {
         Map<String, Object> result = new HashMap<>();
         User user = getUserByUserdetailsIfExist(userDetails);
-        postService.addPost(requestDto, user);
+        Post post = postService.addPost(requestDto, user);
 
+        result.put("post", PostCreateResponseDto.from(post));
         result.put("statusCode", 200);
         result.put("responseMessage", "게시글 작성 성공");
         return result;

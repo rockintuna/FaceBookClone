@@ -40,9 +40,9 @@ public class PostService {
         return postResponseDtoList;
     }
 
-    public void addPost(PostRequestDto requestDto, User user) {
+    public Post addPost(PostRequestDto requestDto, User user) {
         Post newPost = Post.of(requestDto, user);
-        postRepository.save(newPost);
+        return postRepository.save(newPost);
     }
 
     public void editPost(Long postId, PostRequestDto requestDto, User user) {
