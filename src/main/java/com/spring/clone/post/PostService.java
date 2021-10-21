@@ -20,18 +20,15 @@ public class PostService {
     private final PostRepository postRepository;
     private final LikeInfoRepository likeInfoRepository;
 
-    public Map<String, Object> getPostsOrderByCreatedAtDesc(Integer page, UserDetails userDetails) {
-        Page<Post> postPage = postRepository.findAllByOrderByCreatedAtDesc(PageRequest.of(page, 5));
+    public Map<String, Object> getPostsOrderByCreatedAtDesc(UserDetails userDetails) {
+        List<Post> postList = postRepository.findAllByOrderByCreatedAtDesc();
         Map<String, Object> postDataMap = new HashMap<>();
-
-        postDataMap.put("page", postPage.getNumber()+1);
-        postDataMap.put("totalPage", postPage.getTotalPages());
-        postDataMap.put("posts", postPageToPostResponseDtoList(postPage, userDetails));
+        postDataMap.put("posts", postPageToPostResponseDtoList(postList, userDetails));
 
         return postDataMap;
     }
 
-    private List<PostResponseDto> postPageToPostResponseDtoList(Page<Post> postPage,
+    private List<PostResponseDto> postPageToPostResponseDtoList(List<Post> postPage,
                                                                 UserDetails userDetails) {
         List<PostResponseDto> postResponseDtoList = new ArrayList<>();
         postPage.stream()

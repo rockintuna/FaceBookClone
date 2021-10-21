@@ -21,11 +21,10 @@ public class PostController {
 
     @GetMapping("/post")
     public Map<String, Object> getPostsOrderByCreatedAtDesc(
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestParam("page") Integer page
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         Map<String, Object> result =
-                new HashMap<>(postService.getPostsOrderByCreatedAtDesc(page - 1, userDetails));
+                new HashMap<>(postService.getPostsOrderByCreatedAtDesc(userDetails));
         String username = getFullUsernameIfExistOrGuest(userDetails);
         String userImageUrl = getUserProfileImageFrom(userDetails);
         result.put("username", username);
