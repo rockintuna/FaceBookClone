@@ -1,6 +1,7 @@
 package com.spring.clone.comment;
 
 import com.spring.clone.comment.dto.CommentRequestDto;
+import com.spring.clone.comment.dto.CommentResponseDto;
 import com.spring.clone.sercurity.UserDetailsImpl;
 import com.spring.clone.user.User;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +24,12 @@ public class CommentController {
             @RequestBody CommentRequestDto requestDto) {
         Map<String, Object> result = new HashMap<>();
         User user = getUserByUserdetailsIfExist(userDetails);
-        commentService.addComment(requestDto, user);
+        Comment comment = commentService.addComment(requestDto, user);
+        CommentResponseDto responseDto = CommentResponseDto.getCommentResponseDtoFrom(comment);
 
         result.put("statusCode", 200);
         result.put("responseMessage", "댓글 생성 성공");
+        result.put("comment", responseDto);
         return result;
     }
 

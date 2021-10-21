@@ -16,10 +16,10 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostService postService;
 
-    public void addComment(CommentRequestDto requestDto, User user) {
+    public Comment addComment(CommentRequestDto requestDto, User user) {
         Post post = postService.getPostById(requestDto.getPostId());
         Comment newComment = Comment.of(requestDto.getContent(), post, user);
-        commentRepository.save(newComment);
+        return commentRepository.save(newComment);
     }
 
     public void editComment(Long commentId, CommentRequestDto requestDto, User user) {
