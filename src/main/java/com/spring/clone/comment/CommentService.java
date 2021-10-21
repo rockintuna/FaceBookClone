@@ -22,20 +22,22 @@ public class CommentService {
         return commentRepository.save(newComment);
     }
 
-    public void editComment(Long commentId, CommentRequestDto requestDto, User user) {
+    public Comment editComment(Long commentId, CommentRequestDto requestDto, User user) {
         Comment comment = getCommentById(commentId);
         if ( comment.isWritedBy(user) ) {
             comment.setContent(requestDto.getContent());
-            commentRepository.save(comment);
+            return commentRepository.save(comment);
         } else {
             throw new AccessDeniedException("권한이 없습니다.");
         }
     }
 
-    public void deleteComment(Long commentId, User user) {
+    public Long deleteComment(Long commentId, User user) {
         Comment comment = getCommentById(commentId);
+        Long postId = comment.getPost().getId();
         if ( comment.isWritedBy(user) ) {
             commentRepository.delete(comment);
+            return postId;
         } else {
             throw new AccessDeniedException("권한이 없습니다.");
         }

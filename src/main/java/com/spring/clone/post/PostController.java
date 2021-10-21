@@ -21,11 +21,10 @@ public class PostController {
 
     @GetMapping("/post")
     public Map<String, Object> getPostsOrderByCreatedAtDesc(
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestParam("page") Integer page
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         Map<String, Object> result =
-                new HashMap<>(postService.getPostsOrderByCreatedAtDesc(page - 1, userDetails));
+                new HashMap<>(postService.getPostsOrderByCreatedAtDesc(userDetails));
         String username = getFullUsernameIfExistOrGuest(userDetails);
         String userImageUrl = getUserProfileImageFrom(userDetails);
         result.put("username", username);
@@ -80,8 +79,9 @@ public class PostController {
             @RequestBody PostRequestDto requestDto) {
         Map<String, Object> result = new HashMap<>();
         User user = getUserByUserdetailsIfExist(userDetails);
-        postService.editPost(postId, requestDto, user);
+        Post post = postService.editPost(postId, requestDto, user);
 
+        result.put("post", post.toPostResponseDto(userDetails));
         result.put("statusCode", 200);
         result.put("responseMessage", "게시글 수정 성공");
         return result;

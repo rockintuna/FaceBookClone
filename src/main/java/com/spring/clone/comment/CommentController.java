@@ -40,10 +40,13 @@ public class CommentController {
             @RequestBody CommentRequestDto requestDto) {
         User user = getUserByUserdetailsIfExist(userDetails);
         Map<String, Object> result = new HashMap<>();
-        commentService.editComment(commentId, requestDto, user);
+        Comment comment = commentService.editComment(commentId, requestDto, user);
+        CommentResponseDto responseDto = CommentResponseDto.getCommentResponseDtoFrom(comment);
 
+        result.put("postId", comment.getPost().getId());
         result.put("statusCode", 200);
         result.put("responseMessage", "댓글 수정 성공");
+        result.put("comment", responseDto);
         return result;
     }
 
@@ -54,8 +57,9 @@ public class CommentController {
     ) {
         User user = getUserByUserdetailsIfExist(userDetails);
         Map<String, Object> result = new HashMap<>();
-        commentService.deleteComment(commentId, user);
+        Long postId = commentService.deleteComment(commentId, user);
 
+        result.put("postId", postId);
         result.put("statusCode", 200);
         result.put("responseMessage", "댓글 삭제 성공");
         return result;

@@ -70,39 +70,20 @@ class PostServiceTest {
             @DisplayName("게시글 생성순 조회 성공")
             void getPostsOrderByCreatedAtDesc() {
                 //given
-                Page<Post> postPage = new PageImpl<Post>(mockPostList);
-                int page = 0;
-                given(postRepository.findAllByOrderByCreatedAtDesc(PageRequest.of(page,5)))
-                        .willReturn(postPage);
+                given(postRepository.findAllByOrderByCreatedAtDesc())
+                        .willReturn(mockPostList);
 
                 //when
-                Map<String, Object> result = postService.getPostsOrderByCreatedAtDesc(page, mockUserDetails);
+                Map<String, Object> result = postService.getPostsOrderByCreatedAtDesc(mockUserDetails);
                 List<PostResponseDto> responseDtoList = (List<PostResponseDto>) result.get("posts");
 
                 //then
-                assertThat(result.get("page")).isEqualTo(page+1);
-                assertThat(result.get("totalPage")).isEqualTo(1);
                 assertThat(result.get("posts")).isNotNull();
                 assertThat(result.get("posts")).isInstanceOf(ArrayList.class);
                 assertThat(responseDtoList.get(0).getContent()).isEqualTo("test content 1");
                 assertThat(responseDtoList.get(0).getImageUrl()).isEqualTo("/image/img.img");
                 assertThat(responseDtoList.get(0).getFirstName()).isEqualTo(testUser.getFirstName());
                 assertThat(responseDtoList.get(0).getLastName()).isEqualTo(testUser.getLastName());
-            }
-        }
-        @Nested
-        @DisplayName("실패")
-        class Fail {
-            @Test
-            @DisplayName("게시글 생성순 조회 실패 page = null")
-            void getPostsOrderByCreatedAtDescPageNull() {
-                //given
-                Page<Post> postPage = new PageImpl<Post>(mockPostList);
-                Integer page = null;
-
-                //when, then
-                assertThrows(NullPointerException.class,
-                        () -> postService.getPostsOrderByCreatedAtDesc(page, mockUserDetails));
             }
         }
     }

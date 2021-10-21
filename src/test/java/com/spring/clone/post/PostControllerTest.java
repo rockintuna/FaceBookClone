@@ -27,6 +27,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -105,21 +106,16 @@ class PostControllerTest {
                 List<PostResponseDto>responseDtoList = new ArrayList<>();
                 mockPostList.stream().map(post -> post.toPostResponseDto(mockUserDetails))
                         .forEach(responseDtoList::add);
-                result.put("page", 1);
-                result.put("totalPage", 2);
                 result.put("posts", responseDtoList);
 
-                given(postService.getPostsOrderByCreatedAtDesc(0, mockUserDetails))
+                given(postService.getPostsOrderByCreatedAtDesc(mockUserDetails))
                         .willReturn(result);
 
                 //when
-                mvc.perform(get("/post")
-                                .param("page", "1"))
+                mvc.perform(get("/post"))
                         .andDo(print())
                         //then
                         .andExpect(status().isOk())
-                        .andExpect(jsonPath("$.totalPage").value(2))
-                        .andExpect(jsonPath("$.page").value(1))
                         .andExpect(jsonPath("$.posts[0].content").value("test content 1"))
                         .andExpect(jsonPath("$.posts[0].imageUrl").value("/image/img.img"))
                         .andExpect(jsonPath("$.posts[0].firstName").value("tester"))
@@ -131,7 +127,7 @@ class PostControllerTest {
                         .andExpect(jsonPath("$.statusCode").value(200))
                         .andExpect(jsonPath("$.username").value("testtester"));
 
-                verify(postService).getPostsOrderByCreatedAtDesc(0, mockUserDetails);
+                verify(postService).getPostsOrderByCreatedAtDesc(mockUserDetails);
             }
 
             @Test
@@ -143,21 +139,16 @@ class PostControllerTest {
                 List<PostResponseDto>responseDtoList = new ArrayList<>();
                 mockPostList.stream().map(post -> post.toPostResponseDto(null))
                         .forEach(responseDtoList::add);
-                result.put("page", 1);
-                result.put("totalPage", 2);
                 result.put("posts", responseDtoList);
 
-                given(postService.getPostsOrderByCreatedAtDesc(0, null))
+                given(postService.getPostsOrderByCreatedAtDesc(null))
                         .willReturn(result);
 
                 //when
-                mvc.perform(get("/post")
-                                .param("page", "1"))
+                mvc.perform(get("/post"))
                         .andDo(print())
                         //then
                         .andExpect(status().isOk())
-                        .andExpect(jsonPath("$.totalPage").value(2))
-                        .andExpect(jsonPath("$.page").value(1))
                         .andExpect(jsonPath("$.posts[0].content").value("test content 1"))
                         .andExpect(jsonPath("$.posts[0].imageUrl").value("/image/img.img"))
                         .andExpect(jsonPath("$.posts[0].firstName").value("tester"))
@@ -169,26 +160,7 @@ class PostControllerTest {
                         .andExpect(jsonPath("$.statusCode").value(200))
                         .andExpect(jsonPath("$.username").value("guest"));
 
-                verify(postService).getPostsOrderByCreatedAtDesc(0, null);
-            }
-        }
-        @Nested
-        @DisplayName("Get 요청 실패")
-        class GetFail {
-            @Test
-            @DisplayName("'page' parameter 없음")
-            void getPostsOrderByCreatedAtDesc() throws Exception {
-                //given
-                authenticated();
-
-                //when
-                mvc.perform(get("/post"))
-                        .andDo(print())
-
-                        //then
-                        .andExpect(status().isBadRequest());
-
-                verify(postService, never()).getPostsOrderByCreatedAtDesc(0, null);
+                verify(postService).getPostsOrderByCreatedAtDesc(null);
             }
         }
     }
@@ -220,7 +192,15 @@ class PostControllerTest {
                         //then
                         .andExpect(status().isOk())
                         .andExpect(jsonPath("$.statusCode").value(200))
-                        .andExpect(jsonPath("$.post.postId").value(1L));
+                        .andExpect(jsonPath("$.post.postId").value(1L))
+                        .andExpect(jsonPath("$.post.content").value(requestDto.getContent()))
+                        .andExpect(jsonPath("$.post.imageUrl").value(requestDto.getImageUrl()))
+                        .andExpect(jsonPath("$.post.firstName").value(testUser.getFirstName()))
+                        .andExpect(jsonPath("$.post.lastName").value(testUser.getLastName()))
+                        .andExpect(jsonPath("$.post.likeCount").value(0))
+                        .andExpect(jsonPath("$.post.commentCount").value(0))
+                        .andExpect(jsonPath("$.post.liked").value(false))
+                        .andExpect(jsonPath("$.post.comments").isArray());
 
                 verify(postService).addPost(any(PostRequestDto.class), eq(testUser));
             }
@@ -249,7 +229,7 @@ class PostControllerTest {
         class PostFail {
             @Test
             @DisplayName("media type 미정의")
-            void addPost() throws Exception {
+            void addPostInvalidMediaType() throws Exception {
                 //given
                 authenticated();
                 PostRequestDto requestDto = new PostRequestDto("test content", "/test.img");
@@ -358,7 +338,11 @@ class PostControllerTest {
             void editPost() throws Exception {
                 //given
                 PostRequestDto requestDto = new PostRequestDto("test content", "/test.img");
+                Post post = new Post(requestDto.getContent(), requestDto.getImageUrl(), testUser);
+                post.setCreatedAt(LocalDateTime.now());
                 String json = objectMapper.writeValueAsString(requestDto);
+                given(postService.editPost(eq(1L), any(), eq(testUser)))
+                        .willReturn(post);
                 authenticated();
 
                 //when
