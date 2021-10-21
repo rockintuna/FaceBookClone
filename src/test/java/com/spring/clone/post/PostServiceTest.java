@@ -71,7 +71,7 @@ class PostServiceTest {
             void getPostsOrderByCreatedAtDesc() {
                 //given
                 Page<Post> postPage = new PageImpl<Post>(mockPostList);
-                Integer page = 0;
+                int page = 0;
                 given(postRepository.findAllByOrderByCreatedAtDesc(PageRequest.of(page,5)))
                         .willReturn(postPage);
 

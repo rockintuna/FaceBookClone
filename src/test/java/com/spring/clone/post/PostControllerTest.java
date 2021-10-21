@@ -127,7 +127,7 @@ class PostControllerTest {
                         .andExpect(jsonPath("$.posts[0].likeCount").value(0))
                         .andExpect(jsonPath("$.posts[0].commentCount").value(0))
                         .andExpect(jsonPath("$.posts[0].liked").value(false))
-                        .andExpect(jsonPath("$.userImageUrl").doesNotExist())
+                        .andExpect(jsonPath("$.userImageUrl").value("https://district93.org/wp-content/uploads/2017/07/icon-user-default.png"))
                         .andExpect(jsonPath("$.statusCode").value(200))
                         .andExpect(jsonPath("$.username").value("testtester"));
 
@@ -204,7 +204,11 @@ class PostControllerTest {
                 //given
                 authenticated();
                 PostRequestDto requestDto = new PostRequestDto("test content", "/test.img");
+                Post post = new Post(requestDto.getContent(), requestDto.getImageUrl(), testUser);
+                post.setId(1L);
                 String json = objectMapper.writeValueAsString(requestDto);
+                given(postService.addPost(any(PostRequestDto.class), eq(testUser)))
+                        .willReturn(post);
 
                 //when
                 mvc.perform(post("/post")
@@ -215,7 +219,8 @@ class PostControllerTest {
 
                         //then
                         .andExpect(status().isOk())
-                        .andExpect(jsonPath("$.statusCode").value(200));
+                        .andExpect(jsonPath("$.statusCode").value(200))
+                        .andExpect(jsonPath("$.post.postId").value(1L));
 
                 verify(postService).addPost(any(PostRequestDto.class), eq(testUser));
             }
