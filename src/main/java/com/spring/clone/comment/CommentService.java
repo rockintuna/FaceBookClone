@@ -32,10 +32,12 @@ public class CommentService {
         }
     }
 
-    public void deleteComment(Long commentId, User user) {
+    public Long deleteComment(Long commentId, User user) {
         Comment comment = getCommentById(commentId);
+        Long postId = comment.getPost().getId();
         if ( comment.isWritedBy(user) ) {
             commentRepository.delete(comment);
+            return postId;
         } else {
             throw new AccessDeniedException("권한이 없습니다.");
         }
