@@ -220,7 +220,15 @@ class PostControllerTest {
                         //then
                         .andExpect(status().isOk())
                         .andExpect(jsonPath("$.statusCode").value(200))
-                        .andExpect(jsonPath("$.post.postId").value(1L));
+                        .andExpect(jsonPath("$.post.postId").value(1L))
+                        .andExpect(jsonPath("$.post.content").value(requestDto.getContent()))
+                        .andExpect(jsonPath("$.post.imageUrl").value(requestDto.getImageUrl()))
+                        .andExpect(jsonPath("$.post.firstName").value(testUser.getFirstName()))
+                        .andExpect(jsonPath("$.post.lastName").value(testUser.getLastName()))
+                        .andExpect(jsonPath("$.post.likeCount").value(0))
+                        .andExpect(jsonPath("$.post.commentCount").value(0))
+                        .andExpect(jsonPath("$.post.liked").value(false))
+                        .andExpect(jsonPath("$.post.comments").isArray());
 
                 verify(postService).addPost(any(PostRequestDto.class), eq(testUser));
             }
