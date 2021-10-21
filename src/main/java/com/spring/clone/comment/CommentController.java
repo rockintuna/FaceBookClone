@@ -40,10 +40,12 @@ public class CommentController {
             @RequestBody CommentRequestDto requestDto) {
         User user = getUserByUserdetailsIfExist(userDetails);
         Map<String, Object> result = new HashMap<>();
-        commentService.editComment(commentId, requestDto, user);
+        Comment comment = commentService.editComment(commentId, requestDto, user);
+        CommentResponseDto responseDto = CommentResponseDto.getCommentResponseDtoFrom(comment);
 
         result.put("statusCode", 200);
         result.put("responseMessage", "댓글 수정 성공");
+        result.put("comment", responseDto);
         return result;
     }
 
