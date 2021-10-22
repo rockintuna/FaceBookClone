@@ -9,7 +9,6 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
-    PASSWORD_EQUAL(BAD_REQUEST,"비밀번호가 일치하지않습니다"),
 
     POST_NOT_FOUND(BAD_REQUEST, "해당 게시글을 찾을 수 없습니다."),
     REGISTER_ERROR(BAD_REQUEST, "회원정보를 입력해주세요."),

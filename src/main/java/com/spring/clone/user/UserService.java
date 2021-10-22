@@ -51,21 +51,14 @@ public class UserService {
         }
         //비밀번호확인
         String password = requestDto.getPwd();
-        String passwordCheck = requestDto.getPwdCheck();
 
-        if (!password.isEmpty() && !passwordCheck.isEmpty()) {
-            if (password.length() >= 6 && password.length() <= 20) {
-                if (!password.equals(passwordCheck)) {
-                    throw new CloneException(ErrorCode.PASSWORD_EQUAL);
-                }
-            } else {
+        if ( password != null && !password.isEmpty() ) {
+            if (!(password.length() >= 6 && password.length() <= 20)) {
                 throw new CloneException(ErrorCode.PASSWORD_PATTERN_LENGTH);
-
             }
         } else {
             throw new CloneException(ErrorCode.PASSWORD_ENTER);
         }
-
 
 
 
