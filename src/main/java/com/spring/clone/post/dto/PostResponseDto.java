@@ -15,6 +15,7 @@ public class PostResponseDto {
     private Long postId;
     private String content;
     private String imageUrl;
+    private String userImageUrl;
     private LocalDateTime createdAt;
     private String userId;
     private String firstName;
