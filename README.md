@@ -71,7 +71,7 @@ Diagrams
   Webconfig에 있는 addCorsMappings 를 WebSecurityConfig에 옮겨서도 해봤지만 해결되지않아 Access-Control-Allow-Origin에대해 구글링해서 해답을 찾았습니다.<br> 
 원인은 아래와 같습니다.<br>
  
-    ####Access-Control-Allow-Origin: *와 Access-Control-Allow-Credentials: true는 함께 사용할 수 없음<br>
+    Access-Control-Allow-Origin: *와 Access-Control-Allow-Credentials: true는 함께 사용할 수 없습니다.<br>
     CORS는 응답이 Access-Control-Allow-Credentials: true 을 가질 경우, Access-Controll-Allow-Origin의 값으로 *를 사용하지 못하게 막고 있습니다.<br>
 Access-Control-Allow-Credentials: true를 사용하는 경우는 사용자 인증이 필요한 리소스 접근이 필요한 경우인데, 만약 Access-Control-Allow-Origin: *를 허용한다면, CSRF 공격에 매우 취약해져 악의적인 사용자가 인증이 필요한 리소스를 마음대로 접근할 수 있습니다. 그렇기 때문에 CORS 정책에서 아예 동작하지 않도록 막아버린 것입니다.<br>
 Access-Contorl-Allow-Credentials: true인 경우에는 반드시 Access-Control-Allow-Origin의 값이 하나의 origin 값으로 명시되어 있어야 정상적으로 동작합니다.<br>
@@ -79,6 +79,7 @@ Access-Contorl-Allow-Credentials: true인 경우에는 반드시 Access-Control-
   참고 : https://velog.io/@logqwerty/CORS
 
  - 단위 테스트를 어떻게 작성해야 할까?
+ <br>
     BUILD-OPERATE-CHECK 패턴 : 테스트 자료를 만들고 조작하고 결과를 확인하는 세 부분으로 테스트 코드 나누어 가독성을 높여준다. <br>
    테스트 개념을 최소화 : 하나의 테스트 메서드는 하나의 개념만 테스트하고 하나의 개념 당 assert 문 수를 최소로 줄여야 한다. <br>
    <br>
@@ -100,6 +101,7 @@ AssertJ의 assertThat()은 Junit에서 제공하는 assertThat() 보다 then 구
 ,클린 코드 <br>
 
  - 컨트롤러 단위 테스트 작성중 @AuthenticationPrincipal은 어떻게 사용할까?
+ <br>
     커스텀 UserDetails 객체를 만들고
     ```
     testUser = new User(requestDto);
