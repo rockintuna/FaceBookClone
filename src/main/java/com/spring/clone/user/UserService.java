@@ -46,6 +46,23 @@ public class UserService {
             throw new CloneException(ErrorCode.PASSWORD_ENTER);
         }
 
+
+        if (requestDto.getUserId() == null) {
+            throw  new CloneException(ErrorCode.REGISTER_ERROR);
+        }
+        if (requestDto.getPwd() == null) {
+            throw  new CloneException(ErrorCode.REGISTER_ERROR);
+        }
+        if (requestDto.getLastName() == null) {
+            throw  new CloneException(ErrorCode.REGISTER_ERROR);
+        }
+        if (requestDto.getBirth() == null) {
+            throw  new CloneException(ErrorCode.REGISTER_ERROR);
+        }
+        if (requestDto.getFirstName() == null) {
+            throw  new CloneException(ErrorCode.REGISTER_ERROR);
+        }
+
         //가입 아이디 중복체크
         String userId = requestDto.getUserId();
         if (!isValidEmail(userId)) {
@@ -100,6 +117,7 @@ public class UserService {
 
         return user;
     }
+
 
     // 로그인 아이디 중복
     public Map<String, String> duplicateId(UserRequestDto userRequestDto) {

@@ -12,7 +12,7 @@ public enum ErrorCode {
     PASSWORD_EQUAL(BAD_REQUEST,"비밀번호가 일치하지않습니다"),
 
     POST_NOT_FOUND(BAD_REQUEST, "해당 게시글을 찾을 수 없습니다."),
-
+    REGISTER_ERROR(BAD_REQUEST, "회원정보를 입력해주세요."),
     EMAIL_DUPLICATE(BAD_REQUEST, "중복된 아이디가 존재합니다."),
     EMAIL_FORM_INVALID(BAD_REQUEST, "이메일 형식이 올바르지 않습니다."),
     USER_NOT_FOUND(BAD_REQUEST, "회원 정보를 찾을 수 없습니다."),
