@@ -62,20 +62,23 @@ Diagrams
 문제점 / 해결과정
 </summary>
 
- - ####CORS Origin '*'을 했는데 왜 CORS 에러가 발생할까?
+ - CORS Origin '*'을 했는데 왜 CORS 에러가 발생할까?
 
     #### CORS
-+ Cross-origin resource sharing(CORS)는 최초에 리소스를 제공한 출처(origin)와 다른 출처의 리소스를 요청하는 경우(cross-origin 요청), 특정 HTTP header를 사용하여 웹 애플리케이션의 cross-origin 요청을 브라우저가 제한적으로 허용하는 정책입니다.
-+ 프론트 측에서 CORS를 전부 허용해달라고 요청을 했었습니다. 그래서 Access-Control-Allow-Orign 에 *을 줬는데 CORS에러가 떠서
-  Webconfig에 있는 addCorsMappings 를 WebSecurityConfig에 옮겨서도 해봤지만 똑같이 CORS에러가 떠서 Access-Control-Allow-Origin에대해 구글링해서 해답을 찾았습니다. 그이유는 아래와 같습니다.
-+ Access-Control-Allow-Origin: *와 Access-Control-Allow-Credentials: true는 함께 사용할 수 없다.
-  CORS는 응답이 Access-Control-Allow-Credentials: true 을 가질 경우, Access-Controll-Allow-Origin의 값으로 *를 사용하지 못하게 막고 있습니다.
-+ Access-Control-Allow-Credentials: true를 사용하는 경우는 사용자 인증이 필요한 리소스 접근이 필요한 경우인데, 만약 Access-Control-Allow-Origin: *를 허용한다면, CSRF 공격에 매우 취약해져 악의적인 사용자가 인증이 필요한 리소스를 마음대로 접근할 수 있습니다. 그렇기 때문에 CORS 정책에서 아예 동작하지 않도록 막아버린 것입니다.
-+ Access-Contorl-Allow-Credentials: true인 경우에는 반드시 Access-Control-Allow-Origin의 값이 하나의 origin 값으로 명시되어 있어야 정상적으로 동작합니다.
+    Cross-origin resource sharing(CORS)는 최초에 리소스를 제공한 출처(origin)와 다른 출처의 리소스를 요청하는 경우(cross-origin 요청), 특정 HTTP header를 사용하여 웹 애플리케이션의 cross-origin 요청을 브라우저가 제한적으로 허용하는 정책입니다.<br>
+   <br>
+프론트 측에서 CORS를 전부 허용해달라고 요청을 했었습니다. 그래서 Access-Control-Allow-Orign 에 *을 줬는데 CORS에러가 떠서
+  Webconfig에 있는 addCorsMappings 를 WebSecurityConfig에 옮겨서도 해봤지만 해결되지않아 Access-Control-Allow-Origin에대해 구글링해서 해답을 찾았습니다.<br> 
+원인은 아래와 같습니다.<br>
+ 
+    ####Access-Control-Allow-Origin: *와 Access-Control-Allow-Credentials: true는 함께 사용할 수 없음<br>
+    CORS는 응답이 Access-Control-Allow-Credentials: true 을 가질 경우, Access-Controll-Allow-Origin의 값으로 *를 사용하지 못하게 막고 있습니다.<br>
+Access-Control-Allow-Credentials: true를 사용하는 경우는 사용자 인증이 필요한 리소스 접근이 필요한 경우인데, 만약 Access-Control-Allow-Origin: *를 허용한다면, CSRF 공격에 매우 취약해져 악의적인 사용자가 인증이 필요한 리소스를 마음대로 접근할 수 있습니다. 그렇기 때문에 CORS 정책에서 아예 동작하지 않도록 막아버린 것입니다.<br>
+Access-Contorl-Allow-Credentials: true인 경우에는 반드시 Access-Control-Allow-Origin의 값이 하나의 origin 값으로 명시되어 있어야 정상적으로 동작합니다.<br>
 
   참고 : https://velog.io/@logqwerty/CORS
 
- - ####단위 테스트를 어떻게 작성해야 할까? </h4>
+ - 단위 테스트를 어떻게 작성해야 할까?
     BUILD-OPERATE-CHECK 패턴 : 테스트 자료를 만들고 조작하고 결과를 확인하는 세 부분으로 테스트 코드 나누어 가독성을 높여준다. <br>
    테스트 개념을 최소화 : 하나의 테스트 메서드는 하나의 개념만 테스트하고 하나의 개념 당 assert 문 수를 최소로 줄여야 한다. <br>
    <br>
@@ -96,7 +99,7 @@ AssertJ의 assertThat()은 Junit에서 제공하는 assertThat() 보다 then 구
 ,https://docs.spring.io/spring-framework/docs/current/reference/html/testing.html#spring-mvc-test-async-requests <br>
 ,클린 코드 <br>
 
- - ####컨트롤러 단위 테스트 작성중 @AuthenticationPrincipal은 어떻게 사용할까? </h4>
+ - 컨트롤러 단위 테스트 작성중 @AuthenticationPrincipal은 어떻게 사용할까?
     커스텀 UserDetails 객체를 만들고
     ```
     testUser = new User(requestDto);
