@@ -16,7 +16,6 @@ public enum ErrorCode {
     EMAIL_DUPLICATE(BAD_REQUEST, "중복된 아이디가 존재합니다."),
     EMAIL_FORM_INVALID(BAD_REQUEST, "이메일 형식이 올바르지 않습니다."),
     USER_NOT_FOUND(BAD_REQUEST, "회원 정보를 찾을 수 없습니다."),
-
     PASSWORD_PATTERN_LENGTH(BAD_REQUEST, "비밀번호는 6~20자리로 해주세요"),
     PASSWORD_ENTER(BAD_REQUEST, "비밀번호를 입력해주세요"),
     ADMIN_PASSWORD_DISCORDANCE(BAD_REQUEST, "관리자 암호가 틀려 등록이 불가능합니다."),

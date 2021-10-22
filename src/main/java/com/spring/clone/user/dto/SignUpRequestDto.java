@@ -16,6 +16,7 @@ import java.time.LocalDate;
 public class SignUpRequestDto {
     private String userId;
     private String pwd;
+    private String pwdCheck;
     private String firstName;
     private String lastName;
     private LocalDate birth;
