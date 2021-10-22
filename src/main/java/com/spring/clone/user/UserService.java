@@ -34,17 +34,41 @@ public class UserService {
 
 
     public User registerUser(SignUpRequestDto requestDto) throws CloneException {
-
+        if (requestDto.getUserId() == "") {
+            throw  new CloneException(ErrorCode.REGISTER_ERROR);
+        }
+        if (requestDto.getPwd() == "") {
+            throw  new CloneException(ErrorCode.REGISTER_ERROR);
+        }
+        if (requestDto.getLastName() == "") {
+            throw  new CloneException(ErrorCode.REGISTER_ERROR);
+        }
+        if (requestDto.getBirth() == null) {
+            throw  new CloneException(ErrorCode.REGISTER_ERROR);
+        }
+        if (requestDto.getFirstName() == "") {
+            throw  new CloneException(ErrorCode.REGISTER_ERROR);
+        }
         //비밀번호확인
         String password = requestDto.getPwd();
+        String passwordCheck = requestDto.getPwdCheck();
 
-        if ( password != null && !password.isEmpty() ) {
-            if (!(password.length() >= 6 && password.length() <= 20)) {
+        if (!password.isEmpty() && !passwordCheck.isEmpty()) {
+            if (password.length() >= 6 && password.length() <= 20) {
+                if (!password.equals(passwordCheck)) {
+                    throw new CloneException(ErrorCode.PASSWORD_EQUAL);
+                }
+            } else {
                 throw new CloneException(ErrorCode.PASSWORD_PATTERN_LENGTH);
+
             }
         } else {
             throw new CloneException(ErrorCode.PASSWORD_ENTER);
         }
+
+
+
+
 
         //가입 아이디 중복체크
         String userId = requestDto.getUserId();
@@ -100,6 +124,7 @@ public class UserService {
 
         return user;
     }
+
 
     // 로그인 아이디 중복
     public Map<String, String> duplicateId(UserRequestDto userRequestDto) {
