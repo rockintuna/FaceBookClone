@@ -103,18 +103,19 @@ AssertJ의 assertThat()은 Junit에서 제공하는 assertThat() 보다 then 구
  - 컨트롤러 단위 테스트 작성중 @AuthenticationPrincipal은 어떻게 사용할까?
  <br>
     커스텀 UserDetails 객체를 만들고
-    ```
-    testUser = new User(requestDto);
-    mockUserDetails = new UserDetailsImpl(testUser);
-    ```
+    
+```
+testUser = new User(requestDto);
+mockUserDetails = new UserDetailsImpl(testUser);
+```
    SecurityContext에 담으면 테스트 실행시 실제 코드에서 사용되는 @AuthenticationPrincipal에 위에서 생성한 커스텀 UserDetails 객체가 주입되어 사용됩니다. 
-    ```
-   private void authenticated() {
-        Authentication authentication = new UsernamePasswordAuthenticationToken(mockUserDetails, "", mockUserDetails.getAuthorities());
-        securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(authentication);
-    }
-   ```
+```
+private void authenticated() {
+    Authentication authentication = new UsernamePasswordAuthenticationToken(mockUserDetails, "", mockUserDetails.getAuthorities());
+    securityContext = SecurityContextHolder.getContext();
+    securityContext.setAuthentication(authentication);
+}
+```
 
     참고 : https://newbedev.com/spring-test-security-how-to-mock-authentication
 </details>
