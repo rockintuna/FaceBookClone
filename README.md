@@ -120,4 +120,4 @@ private void authenticated() {
     참고 : https://newbedev.com/spring-test-security-how-to-mock-authentication
 </details>
  
-[YOUTUBE 영상](http://youtube.com) 
+[YOUTUBE 영상](https://www.youtube.com/watch?v=ZZ4QNsdwrVo) 
