@@ -28,21 +28,21 @@ API설계
 |---|---|---|---|---|
 |로그인|POST|/user/login|{<br>userId: userId<br>pwd: pwd<br>}|{<br>statusCode : 200<br>responseMessage: 로그인 성공<br>jwtToken: jwtToken,<br>userId: userId<br>}|
 |회원가입|POST|/user/register|{<br>userId: userId<br>pwd: pwd<br>fistName: fistName<br>lastName: lastName<br>birth: birth<br>sex: sex<br>}|{<br>firstName: firstName<br>lastName: lastName<br>sex: sex<br>birth: birth<br>id: id<br>responseMessage: responseMessage<br>userId: userId<br>statusCode: statusCode<br>result: result<br>}|
-|사용자 프로필 이미지 변경|PUT|/user/info<br> optional Header :Authorization="Bearer<br>  eyJhbGciOiJIUzI<br> 1NiJ9.eyJzdWIiOiJy<br> b2NraW5d4cCI6<br> MTYzNDY1MzEwN<br> n0.fR3PrXfjAGWD8<br> 5YaXw9dmXSvXcJ9<br> dBtvnb2sHsS9j_U"|{<br>imageUrl: imageUrl<br>}|{<br>statusCode : 200<br>responseMessage: 사용자 이미지 수정 완료<br>userId: userId<br>imageUrl: imageUrl<br>}|
-|사용자 정보 조회|POST|/user/info<br> optional Header :<br>Authorization="Bearer<br> eyJhbGciOiJIUzI1<br>NiJ9.eyJzdWIiOiJy<br>b2NraW5<br>d4cCI6MTYzNDY<br>1MzEwNn0.fR3PrXf<br>jAGWD85YaXw9dmXSvXcJ9<br>dBtvnb2sHsS9j_U"|-|{<br>statusCode : 200<br>responseMessage: 사용자 정보 전달<br>userId: userId<br>firstName: firstName<br>lastName: lastName<br>imageUrl: imageUrl<br>}|
-|전체 사용자 정보 조회|GET|/user/list<br>Header :<br> Authorization="Bearer <br> eyJhbGciOiJIUzI1N<br> iJ9.eyJzdWIiO<br> iJyb2NraW5d4cCI6MTYz<br> NDY1MzEwNn0.fR3P<br> rXfjAGWD85YaXw<br> 9dmXSvXcJ9dBtvnb2<br> sHsS9j_U"<br> 토큰 헤더 추가하면<br>  로그인한 유저 정보를<br>  뺀 나머지 유저<br>  정보 전달|-|{<br>statusCode : 200<br>responseMessage: 사용자 리스트 전달<br>users:[{<br>userId: userId<br>firstName: firstName<br>lastName: lastName<br>imageUrl: imageUrl<br>}]<br>}|
+|사용자 프로필 이미지 변경|PUT|/user/info|{<br>imageUrl: imageUrl<br>}|{<br>statusCode : 200<br>responseMessage: 사용자 이미지 수정 완료<br>userId: userId<br>imageUrl: imageUrl<br>}|
+|사용자 정보 조회|POST|/user/info |-|{<br>statusCode : 200<br>responseMessage: 사용자 정보 전달<br>userId: userId<br>firstName: firstName<br>lastName: lastName<br>imageUrl: imageUrl<br>}|
+|전체 사용자 정보 조회|GET|/user/list|-|{<br>statusCode : 200<br>responseMessage: 사용자 리스트 전달<br>users:[{<br>userId: userId<br>firstName: firstName<br>lastName: lastName<br>imageUrl: imageUrl<br>}]<br>}|
 
 ### 게시글,댓글
 |기능　　　　　|Method|URL|Request|Response|
 |---|---|---|---|---|
 |게시글 작성|POST|/post|{<br>content: content<br>imageUrl: imageUrl<br>}|{<br>statusCode : 200<br>responseMessage: 게시글 작성 성공<br>}|
-|게시글 수정|PUT|/post/{postId}<br>Header :<br>Authorization="Bearer<br> eyJhbGciOiJIUz<br>I1NiJ9.eyJzdWIi<br>OiJyb2NraW5d4<br>cCI6MTYzNDY<br>MzEwNn0.fR3PrX<br>fjAGWD85YaXw9<br>dmXSvXcJ9dBt<br>vnb2sHsS9j_U"|{<br>content: content<br>imageUrl: imageUrl<br>}|{<br>post: {<br>postId: postId<br>content: content<br>imageUrl: imageUrl<br>createdAt: createdAt<br>firstName: firstName<br>lastName: lastName<br>likeCount: likeCount<br>commentCount: commentCount<br>comments: comments<br>liked: liked<br>},<br>responseMessage: <br>responseMessage<br>statusCode: <br>statusCode<br>}|
-|게시글 삭제|DELETE|/post/{postId}<br>Header : Authorization="Bearer<br> eyJhbGciOiJIUzI<br>1NiJ9.eyJzdWIiOiJyb<br>2NraW5d4cCI6MTYzNDY1<br>MzEwNn0.fR3PrX<br>fjAGWD85YaXw9dmX<br>SvXcJ9dBtvnb2<br>sHsS9j_U"|-|{<br>statusCode : 200<br>responseMessage: 게시글 삭제 성공<br>}|
-|게시글 조회|GET|/post?page=page<br>optional <br>Header : Authorization="Bearer<br> eyJhbGciOiJIUzI1Ni<br>J9.eyJzdWIiOiJ<br>yb2NraW5d4cCI6MTYzND<br>Y1MzEwNn0.fR3PrXf<br>jAGWD85YaXw9dmXS<br>vXcJ9dBtvnb2s<br>HsS9j_U"<br>토큰 헤더 추가하면<br> 로그인한 사용자의<br> 게시글별 좋아요<br> 상태 확인 가능<br>추가하지 않으면 <br>모든 게시글 좋아요<br> 상태 false 및 <br>username = "guest"|-|{<br>statusCode : 200<br>responseMessage: 게시글 조회 성공<br>page: page<br>totalPage: totalPage<br>username: username<br>userImageUrl: userImageUrl<br>posts:[{<br>postId: postId<br>content: content<br>imageUrl: imageUrl<br>createdAt: createdAt<br>firstName: firstName<br>lastName: lastName<br>likeCount: likeCount<br>commentCount: commentCount<br>isLiked: isLiked<br>comments: [{<br>commentId:commentId<br>content:content<br>userImageUrl: userImageUrl<br>createdAt: createdAt<br>userId: userId<br>firstName: firstName<br>lastName: lastName}]<br>}]<br>}|
-|댓글삭제|DELETE|/comment/{commentId}<br>Header :<br> Authorization="Bearer <br>eyJhbGciOiJ<br>IUzI1NiJ9.eyJzdW<br>IiOiJyb2Nr<br>aW5d4cCI6MTY<br>NDY1MzEwNn0.f<br>R3PrXfjAGWD85Ya<br>Xw9dmXSvXcJ9d<br>Btvnb2sHsS9j_U"|-|{<br>statusCode : 200<br>responseMessage: 댓글 삭제 성공<br>postId: postId<br>}|
-|댓글수정|PUT|/comment/{commentId}<br>Header :<br> Authorization="Bearer<br> eyJhbGciOiJIUzI1Ni<br>J9.eyJzdWIiOiJyb2NraW<br>5d4cCI6MTYzNDY1Mz<br>EwNn0.fR3PrXfjAGWD<br>85YaXw9dmXSvXc<br>J9dBtvnb2sHsS9j_U"|{<br>content: content<br>}|{<br>comment: {<br>commentId: commentId<br>content: content<br>createdAt: createdAt<br>userId: userId<br>userImageUrl: userImageUrl<br>firstName: firstName<br>lastName: lastName<br>},<br>postId: postId<br>responseMessage: 댓글 수정 성공<br>statusCode: 200<br>}|
-|댓글작성|POST|/comment<br>Header : <br>Authorization="Bearer<br> eyJhbGciOiJIUzI1N<br>iJ9.eyJzdWIiOiJyb<br>2NraW5d4cCI6MTYzND<br>Y1MzEwNn0.fR3Pr<br>XfjAGWD85YaXw9dm<br>XSvXcJ9dBtvn<br>b2sHsS9j_U"|{<br>content: content<br>postId: postId<br>}|{<br>statusCode : 200<br>responseMessage: 댓글 생성 성공<br>comment: {<br>commentId:commentId<br>content:content<br>userImageUrl: userImageUrl<br>createdAt: createdAt<br>userId: userId<br>firstName: firstName<br>lastName: lastName}<br>}|
-|좋아요 변경|POST|/post/{postId}/like<br>Header : <br>Authorization="Bearer<br> eyJhbGciOiJIUzI<br>1NiJ9.eyJzdWIiOiJyb<br>2NraW5d4cCI6MTYzNDY<br>1MzEwNn0.fR3PrXfj<br>AGWD85YaXw9dmXSvX<br>cJ9dBtvnb2sHsS9j_U"|-|{<br>isLiked: isLiked<br>statusCode : 200<br>responseMessage: 좋아요 변경 성공<br>}|
+|게시글 수정|PUT|/post/{postId}|{<br>content: content<br>imageUrl: imageUrl<br>}|{<br>post: {<br>postId: postId<br>content: content<br>imageUrl: imageUrl<br>createdAt: createdAt<br>firstName: firstName<br>lastName: lastName<br>likeCount: likeCount<br>commentCount: commentCount<br>comments: comments<br>liked: liked<br>},<br>responseMessage: <br>responseMessage<br>statusCode: <br>statusCode<br>}|
+|게시글 삭제|DELETE|/post/{postId}|-|{<br>statusCode : 200<br>responseMessage: 게시글 삭제 성공<br>}|
+|게시글 조회|GET|/post?page=page|-|{<br>statusCode : 200<br>responseMessage: 게시글 조회 성공<br>page: page<br>totalPage: totalPage<br>username: username<br>userImageUrl: userImageUrl<br>posts:[{<br>postId: postId<br>content: content<br>imageUrl: imageUrl<br>createdAt: createdAt<br>firstName: firstName<br>lastName: lastName<br>likeCount: likeCount<br>commentCount: commentCount<br>isLiked: isLiked<br>comments: [{<br>commentId:commentId<br>content:content<br>userImageUrl: userImageUrl<br>createdAt: createdAt<br>userId: userId<br>firstName: firstName<br>lastName: lastName}]<br>}]<br>}|
+|댓글삭제|DELETE|/comment/{commentId}|-|{<br>statusCode : 200<br>responseMessage: 댓글 삭제 성공<br>postId: postId<br>}|
+|댓글수정|PUT|/comment/{commentId|{<br>content: content<br>}|{<br>comment: {<br>commentId: commentId<br>content: content<br>createdAt: createdAt<br>userId: userId<br>userImageUrl: userImageUrl<br>firstName: firstName<br>lastName: lastName<br>},<br>postId: postId<br>responseMessage: 댓글 수정 성공<br>statusCode: 200<br>}|
+|댓글작성|POST|/comment|{<br>content: content<br>postId: postId<br>}|{<br>statusCode : 200<br>responseMessage: 댓글 생성 성공<br>comment: {<br>commentId:commentId<br>content:content<br>userImageUrl: userImageUrl<br>createdAt: createdAt<br>userId: userId<br>firstName: firstName<br>lastName: lastName}<br>}|
+|좋아요 변경|POST|/post/{postId}/like|-|{<br>isLiked: isLiked<br>statusCode : 200<br>responseMessage: 좋아요 변경 성공<br>}|
 
 
 
@@ -50,7 +50,7 @@ API설계
 
 <details markdown = "1">
 <summary>
-Diagrams
+Entity-Relationship Diagram
 </summary>
  <div>
 <img src= "https://media.vlpt.us/images/junseokoo/post/982e77ed-0fde-4d5b-8dcd-3ddfed639e69/image.png">
