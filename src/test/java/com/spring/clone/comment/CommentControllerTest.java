@@ -66,17 +66,17 @@ class CommentControllerTest {
     @BeforeEach
     private void beforeEach() {
         SignUpRequestDto requestDto = new SignUpRequestDto(
-                "tester@test.com","password","tester","test", LocalDate.now(),"man",false,null);
+                "tester@test.com", "password", "tester", "test", LocalDate.now(), "man", false, null);
         testUser = new User(requestDto);
         mockUserDetails = new UserDetailsImpl(testUser);
         //given
         for (int i = 1; i < 6; i++) {
-            Post post = Post.of(new PostRequestDto("test content "+i, "/image/img.img"), testUser);
+            Post post = Post.of(new PostRequestDto("test content " + i, "/image/img.img"), testUser);
             post.setId((long) i);
             mockPostList.add(post);
         }
         for (int i = 1; i < 6; i++) {
-            Comment comment = new Comment("test comment "+i, mockPostList.get(0), testUser);
+            Comment comment = new Comment("test comment " + i, mockPostList.get(0), testUser);
         }
     }
 
@@ -125,6 +125,7 @@ class CommentControllerTest {
                 verify(commentService).addComment(any(CommentRequestDto.class), eq(testUser));
             }
         }
+
         @Nested
         @DisplayName("Post 요청 실패")
         class PostFail {
@@ -261,6 +262,7 @@ class CommentControllerTest {
                 verify(commentService).editComment(eq(1L), any(CommentRequestDto.class), eq(testUser));
             }
         }
+
         @Nested
         @DisplayName("Put 요청 실패")
         class PutFail {
@@ -408,6 +410,7 @@ class CommentControllerTest {
                 verify(commentService).deleteComment(1L, testUser);
             }
         }
+
         @Nested
         @DisplayName("Delete 요청 실패")
         class DeleteFail {
@@ -450,6 +453,7 @@ class CommentControllerTest {
 
                 verify(commentService).deleteComment(1L, testUser);
             }
+
             @Test
             @DisplayName("댓글 없음")
             void editCommentNoComment() throws Exception {

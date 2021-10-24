@@ -65,7 +65,7 @@ public class Post extends Timestamped {
     }
 
     public PostResponseDto toPostResponseDto(UserDetails userDetails) {
-        if ( userDetails == null ) {
+        if (userDetails == null) {
             return PostResponseDto.builder()
                     .postId(this.id)
                     .content(this.content)

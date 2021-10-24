@@ -24,7 +24,7 @@ public class UserController {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    public UserController(UserService userService, JwtTokenProvider jwtTokenProvider){
+    public UserController(UserService userService, JwtTokenProvider jwtTokenProvider) {
         this.userService = userService;
         this.jwtTokenProvider = jwtTokenProvider;
     }
@@ -40,7 +40,7 @@ public class UserController {
         result.put("firstName", user.getFirstName());
         result.put("lastName", user.getLastName());
         result.put("birth", user.getBirth());
-        result.put("sex",user.getSex());
+        result.put("sex", user.getSex());
         result.put("statusCode", 200);
         result.put("responseMessage", "회원가입 성공");
 
@@ -50,14 +50,14 @@ public class UserController {
 
     // 로그인
     @PostMapping("/user/login")
-    public Map<String,Object> login(@RequestBody UserRequestDto requestDto) throws CloneException {
+    public Map<String, Object> login(@RequestBody UserRequestDto requestDto) throws CloneException {
         User user = userService.login(requestDto);
 
-        Map<String,Object> result =new HashMap<>();
-        result.put("token",jwtTokenProvider.createToken(user.getUserId(), user.getUserId())); // "username" : {username}
+        Map<String, Object> result = new HashMap<>();
+        result.put("token", jwtTokenProvider.createToken(user.getUserId(), user.getUserId())); // "username" : {username}
         result.put("userId", user.getUserId());
 
-        result.put("statusCode",200);
+        result.put("statusCode", 200);
         result.put("responseMessage", "로그인 성공");
 
         return result;

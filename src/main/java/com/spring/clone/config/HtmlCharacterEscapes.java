@@ -33,7 +33,7 @@ public class HtmlCharacterEscapes extends CharacterEscapes {
         if (Character.isHighSurrogate(charAt) || Character.isLowSurrogate(charAt)) {
             StringBuilder sb = new StringBuilder();
             sb.append("\\u");
-            sb.append(String.format("%04x",ch));
+            sb.append(String.format("%04x", ch));
             serializedString = new SerializedString(sb.toString());
         } else {
             serializedString = new SerializedString(StringEscapeUtils.escapeHtml4(Character.toString(charAt)));

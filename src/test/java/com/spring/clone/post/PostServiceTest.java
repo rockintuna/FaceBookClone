@@ -49,12 +49,12 @@ class PostServiceTest {
     private void beforeEach() {
         //given
         SignUpRequestDto requestDto = new SignUpRequestDto(
-                "tester@test.com","password","tester","test", LocalDate.now(),"man",false,null);
+                "tester@test.com", "password", "tester", "test", LocalDate.now(), "man", false, null);
         testUser = new User(requestDto);
         mockUserDetails = new UserDetailsImpl(testUser);
 
         for (int i = 1; i < 6; i++) {
-            Post post = Post.of(new PostRequestDto("test content "+i, "/image/img.img"), testUser);
+            Post post = Post.of(new PostRequestDto("test content " + i, "/image/img.img"), testUser);
             post.setId((long) i);
             mockPostList.add(post);
         }
@@ -107,6 +107,7 @@ class PostServiceTest {
                 verify(postRepository).save(any(Post.class));
             }
         }
+
         @Nested
         @DisplayName("실패")
         class Fail {
@@ -145,6 +146,7 @@ class PostServiceTest {
                 verify(postRepository).save(any(Post.class));
             }
         }
+
         @Nested
         @DisplayName("실패")
         class Fail {
@@ -160,6 +162,7 @@ class PostServiceTest {
                         () -> postService.editPost(1L, postRequestDto, testUser));
                 verify(postRepository, never()).save(any(Post.class));
             }
+
             @Test
             @DisplayName("게시글 수정 실패 요청 데이터 없음")
             void editPostNoData() {
@@ -173,12 +176,13 @@ class PostServiceTest {
                         () -> postService.editPost(1L, postRequestDto, testUser));
                 verify(postRepository, never()).save(any(Post.class));
             }
+
             @Test
             @DisplayName("게시글 수정 실패 권한 없음")
             void editPostNoPermission() {
                 //given
                 SignUpRequestDto requestDto = new SignUpRequestDto(
-                        "older@test.com","password","older","test", LocalDate.now(),"man",false,null);
+                        "older@test.com", "password", "older", "test", LocalDate.now(), "man", false, null);
                 User oldUser = new User(requestDto);
                 PostRequestDto postRequestDto = new PostRequestDto("test content", "/test.img");
                 Post post = new Post("old content", "/old.img", oldUser);
@@ -212,6 +216,7 @@ class PostServiceTest {
                 verify(postRepository).delete(any(Post.class));
             }
         }
+
         @Nested
         @DisplayName("실패")
         class Fail {
@@ -232,7 +237,7 @@ class PostServiceTest {
             void deletePostNoPermission() {
                 //given
                 SignUpRequestDto requestDto = new SignUpRequestDto(
-                        "older@test.com","password","older","test", LocalDate.now(),"man",false,null);
+                        "older@test.com", "password", "older", "test", LocalDate.now(), "man", false, null);
                 User oldUser = new User(requestDto);
                 PostRequestDto postRequestDto = new PostRequestDto("test content", "/test.img");
                 Post post = new Post("old content", "/old.img", oldUser);
@@ -291,6 +296,7 @@ class PostServiceTest {
                 verify(likeInfoRepository).delete(any(LikeInfo.class));
             }
         }
+
         @Nested
         @DisplayName("실패")
         class Fail {

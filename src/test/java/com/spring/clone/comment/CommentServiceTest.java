@@ -47,16 +47,16 @@ class CommentServiceTest {
     @BeforeEach
     private void beforeEach() {
         SignUpRequestDto requestDto = new SignUpRequestDto(
-                "tester@test.com","password","tester","test", LocalDate.now(),"man",false,null);
+                "tester@test.com", "password", "tester", "test", LocalDate.now(), "man", false, null);
         testUser = new User(requestDto);
         //given
         for (int i = 1; i < 6; i++) {
-            Post post = Post.of(new PostRequestDto("test content "+i, "/image/img.img"), testUser);
+            Post post = Post.of(new PostRequestDto("test content " + i, "/image/img.img"), testUser);
             post.setId((long) i);
             mockPostList.add(post);
         }
         for (int i = 1; i < 6; i++) {
-            Comment comment = new Comment("test comment "+i, mockPostList.get(0), testUser);
+            Comment comment = new Comment("test comment " + i, mockPostList.get(0), testUser);
         }
     }
 
@@ -91,6 +91,7 @@ class CommentServiceTest {
                 verify(commentRepository).save(any(Comment.class));
             }
         }
+
         @Nested
         @DisplayName("실패")
         class Fail {
@@ -113,7 +114,6 @@ class CommentServiceTest {
             }
         }
     }
-
 
 
     @Nested
@@ -147,6 +147,7 @@ class CommentServiceTest {
                 verify(commentRepository).save(any(Comment.class));
             }
         }
+
         @Nested
         @DisplayName("실패")
         class Fail {
@@ -170,7 +171,7 @@ class CommentServiceTest {
             void editCommentNoPermission() {
                 //given
                 SignUpRequestDto signUpRequestDto = new SignUpRequestDto(
-                        "older@test.com","password","older","test", LocalDate.now(),"man",false,null);
+                        "older@test.com", "password", "older", "test", LocalDate.now(), "man", false, null);
                 User oldUser = new User(signUpRequestDto);
                 CommentRequestDto requestDto = new CommentRequestDto();
                 requestDto.setPostId(1L);
@@ -187,7 +188,6 @@ class CommentServiceTest {
             }
         }
     }
-
 
 
     @Nested
@@ -216,6 +216,7 @@ class CommentServiceTest {
                 verify(commentRepository).delete(any(Comment.class));
             }
         }
+
         @Nested
         @DisplayName("실패")
         class Fail {
@@ -232,12 +233,13 @@ class CommentServiceTest {
                 verify(commentRepository).findById(1L);
                 verify(commentRepository, never()).delete(any());
             }
+
             @Test
             @DisplayName("권한 없음")
             void deleteCommentNoPermission() {
                 //given
                 SignUpRequestDto signUpRequestDto = new SignUpRequestDto(
-                        "older@test.com","password","older","test", LocalDate.now(),"man",false,null);
+                        "older@test.com", "password", "older", "test", LocalDate.now(), "man", false, null);
                 User oldUser = new User(signUpRequestDto);
                 CommentRequestDto requestDto = new CommentRequestDto();
                 requestDto.setPostId(1L);

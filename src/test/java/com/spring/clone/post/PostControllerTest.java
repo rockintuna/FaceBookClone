@@ -66,22 +66,22 @@ class PostControllerTest {
     @BeforeEach
     private void beforeEach() {
         SignUpRequestDto requestDto = new SignUpRequestDto(
-                "tester@test.com","password","tester","test", LocalDate.now(),"man",false,null);
+                "tester@test.com", "password", "tester", "test", LocalDate.now(), "man", false, null);
         testUser = new User(requestDto);
         mockUserDetails = new UserDetailsImpl(testUser);
         //given
         mockPostList.add(Post.of(
-                new PostRequestDto("test content 1","/image/img.img"), testUser));
+                new PostRequestDto("test content 1", "/image/img.img"), testUser));
         mockPostList.add(Post.of(
-                new PostRequestDto("test content 2","/image/img.img"), testUser));
+                new PostRequestDto("test content 2", "/image/img.img"), testUser));
         mockPostList.add(Post.of(
-                new PostRequestDto("test content 3","/image/img.img"), testUser));
+                new PostRequestDto("test content 3", "/image/img.img"), testUser));
         mockPostList.add(Post.of(
-                new PostRequestDto("test content 4","/image/img.img"), testUser));
+                new PostRequestDto("test content 4", "/image/img.img"), testUser));
         mockPostList.add(Post.of(
-                new PostRequestDto("test content 5","/image/img.img"), testUser));
+                new PostRequestDto("test content 5", "/image/img.img"), testUser));
         mockPostList.add(Post.of(
-                new PostRequestDto("test content 6","/image/img.img"), testUser));
+                new PostRequestDto("test content 6", "/image/img.img"), testUser));
 
     }
 
@@ -102,8 +102,8 @@ class PostControllerTest {
             void getPostsOrderByCreatedAtDesc() throws Exception {
                 //given
                 authenticated();
-                Map < String, Object > result = new HashMap<>();
-                List<PostResponseDto>responseDtoList = new ArrayList<>();
+                Map<String, Object> result = new HashMap<>();
+                List<PostResponseDto> responseDtoList = new ArrayList<>();
                 mockPostList.stream().map(post -> post.toPostResponseDto(mockUserDetails))
                         .forEach(responseDtoList::add);
                 result.put("posts", responseDtoList);
@@ -135,8 +135,8 @@ class PostControllerTest {
             @DisplayName("로그인하지않은 사용자")
             void getPostsOrderByCreatedAtDescWithNoLogin() throws Exception {
                 //given
-                Map < String, Object > result = new HashMap<>();
-                List<PostResponseDto>responseDtoList = new ArrayList<>();
+                Map<String, Object> result = new HashMap<>();
+                List<PostResponseDto> responseDtoList = new ArrayList<>();
                 mockPostList.stream().map(post -> post.toPostResponseDto(null))
                         .forEach(responseDtoList::add);
                 result.put("posts", responseDtoList);
@@ -164,6 +164,7 @@ class PostControllerTest {
             }
         }
     }
+
     @Nested
     @DisplayName("Post 요청")
     class HttpPost {
@@ -204,6 +205,7 @@ class PostControllerTest {
 
                 verify(postService).addPost(any(PostRequestDto.class), eq(testUser));
             }
+
             @Test
             @DisplayName("Post /post/{postId}/like")
             void likePost() throws Exception {
@@ -224,6 +226,7 @@ class PostControllerTest {
                 verify(postService).toggleLikeInfo(1L, testUser);
             }
         }
+
         @Nested
         @DisplayName("Post 요청 실패")
         class PostFail {
@@ -246,6 +249,7 @@ class PostControllerTest {
 
                 verify(postService, never()).addPost(any(), any());
             }
+
             @Test
             @DisplayName("요청 데이터 없음")
             void addPostNoData() throws Exception {
@@ -327,6 +331,7 @@ class PostControllerTest {
             }
         }
     }
+
     @Nested
     @DisplayName("Put 요청")
     class HttpPut {
@@ -359,6 +364,7 @@ class PostControllerTest {
                 verify(postService).editPost(eq(1L), any(PostRequestDto.class), eq(testUser));
             }
         }
+
         @Nested
         @DisplayName("Put 요청 실패")
         class PutFail {
@@ -430,7 +436,7 @@ class PostControllerTest {
                 String json = objectMapper.writeValueAsString(requestDto);
                 authenticated();
                 willThrow(AccessDeniedException.class).given(postService)
-                                .editPost(eq(1L), any(PostRequestDto.class), eq(testUser));
+                        .editPost(eq(1L), any(PostRequestDto.class), eq(testUser));
 
                 //when
                 mvc.perform(put("/post/1")
@@ -446,6 +452,7 @@ class PostControllerTest {
             }
         }
     }
+
     @Nested
     @DisplayName("Delete 요청")
     class HttpDelete {
@@ -470,6 +477,7 @@ class PostControllerTest {
                 verify(postService).deletePost(1L, testUser);
             }
         }
+
         @Nested
         @DisplayName("Delete 요청 실패")
         class DeleteFail {

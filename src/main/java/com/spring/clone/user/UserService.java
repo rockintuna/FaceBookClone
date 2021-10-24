@@ -24,35 +24,34 @@ public class UserService {
 
 
     private static final String ADMIN_TOKEN = "AAABnv/xRVklrnYxKZ0aHgTBcXukeZygoC";
+
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder){
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
 
-
-
     public User registerUser(SignUpRequestDto requestDto) throws CloneException {
         if (requestDto.getUserId() == "") {
-            throw  new CloneException(ErrorCode.REGISTER_ERROR);
+            throw new CloneException(ErrorCode.REGISTER_ERROR);
         }
         if (requestDto.getPwd() == "") {
-            throw  new CloneException(ErrorCode.REGISTER_ERROR);
+            throw new CloneException(ErrorCode.REGISTER_ERROR);
         }
         if (requestDto.getLastName() == "") {
-            throw  new CloneException(ErrorCode.REGISTER_ERROR);
+            throw new CloneException(ErrorCode.REGISTER_ERROR);
         }
         if (requestDto.getBirth() == null) {
-            throw  new CloneException(ErrorCode.REGISTER_ERROR);
+            throw new CloneException(ErrorCode.REGISTER_ERROR);
         }
         if (requestDto.getFirstName() == "") {
-            throw  new CloneException(ErrorCode.REGISTER_ERROR);
+            throw new CloneException(ErrorCode.REGISTER_ERROR);
         }
         //비밀번호확인
         String password = requestDto.getPwd();
 
-        if ( password != null && !password.isEmpty() ) {
+        if (password != null && !password.isEmpty()) {
             if (!(password.length() >= 6 && password.length() <= 20)) {
                 throw new CloneException(ErrorCode.PASSWORD_PATTERN_LENGTH);
             }
@@ -61,15 +60,13 @@ public class UserService {
         }
 
 
-
-
         //가입 아이디 중복체크
         String userId = requestDto.getUserId();
         if (!isValidEmail(userId)) {
             throw new CloneException(ErrorCode.EMAIL_FORM_INVALID);
         }
         Optional<User> found = userRepository.findByUserId(userId);
-        if (found.isPresent()){
+        if (found.isPresent()) {
             throw new CloneException(ErrorCode.EMAIL_DUPLICATE);
         }
 
@@ -90,7 +87,6 @@ public class UserService {
         return userRepository.save(user);
 
 
-
     }
 
 
@@ -99,9 +95,11 @@ public class UserService {
         String regex = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(email);
-        if(m.matches()) { err = true; } return err;
+        if (m.matches()) {
+            err = true;
+        }
+        return err;
     }
-
 
 
     //로그인

@@ -29,7 +29,7 @@ public class UserResponseDto {
     public static List<UserResponseDto> listOf(List<User> users, UserDetailsImpl userDetails) {
         List<UserResponseDto> responseDtoList = new ArrayList<>();
 
-        if ( userDetails == null ) {
+        if (userDetails == null) {
             users.stream().map(UserResponseDto::of)
                     .forEach(responseDtoList::add);
         } else {

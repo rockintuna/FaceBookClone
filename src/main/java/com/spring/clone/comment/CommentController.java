@@ -67,7 +67,7 @@ public class CommentController {
 
     private User getUserByUserdetailsIfExist(UserDetailsImpl userDetails) {
         User user;
-        if ( userDetails != null ) {
+        if (userDetails != null) {
             user = userDetails.getUser();
         } else {
             throw new AuthenticationServiceException("로그인이 필요합니다.");

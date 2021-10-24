@@ -36,7 +36,7 @@ public class PostController {
 
     private String getUserProfileImageFrom(UserDetailsImpl userDetails) {
         String userImageUrl;
-        if ( userDetails != null ) {
+        if (userDetails != null) {
             userImageUrl = userDetails.getUser().getImageUrl();
         } else {
             userImageUrl = null;
@@ -46,7 +46,7 @@ public class PostController {
 
     private String getFullUsernameIfExistOrGuest(UserDetailsImpl userDetails) {
         String username;
-        if ( userDetails != null ) {
+        if (userDetails != null) {
             username = getFullUsernameFrom(userDetails);
         } else {
             username = "guest";
@@ -55,7 +55,7 @@ public class PostController {
     }
 
     private String getFullUsernameFrom(UserDetailsImpl userDetails) {
-        return userDetails.getUser().getLastName()+ userDetails.getUser().getFirstName();
+        return userDetails.getUser().getLastName() + userDetails.getUser().getFirstName();
     }
 
     @PostMapping("/post")
@@ -118,7 +118,7 @@ public class PostController {
 
     private User getUserByUserdetailsIfExist(UserDetailsImpl userDetails) {
         User user;
-        if ( userDetails != null ) {
+        if (userDetails != null) {
             user = userDetails.getUser();
         } else {
             throw new AuthenticationServiceException("로그인이 필요합니다.");

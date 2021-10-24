@@ -12,7 +12,7 @@ import java.util.Map;
 public class RestApiExceptionHandler {
 
 
-    @ExceptionHandler(value = { CloneException.class })
+    @ExceptionHandler(value = {CloneException.class})
     public ResponseEntity<Map<String, Object>> handleApiRequestException(CloneException ex) {
         Map<String, Object> result = new HashMap<>();
 

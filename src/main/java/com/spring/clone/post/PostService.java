@@ -44,7 +44,7 @@ public class PostService {
 
     public Post editPost(Long postId, PostRequestDto requestDto, User user) {
         Post post = getPostById(postId);
-        if ( post.isWritedBy(user) ) {
+        if (post.isWritedBy(user)) {
             post.update(requestDto);
             return postRepository.save(post);
         } else {
@@ -54,7 +54,7 @@ public class PostService {
 
     public void deletePost(Long postId, User user) {
         Post post = getPostById(postId);
-        if ( post.isWritedBy(user) ) {
+        if (post.isWritedBy(user)) {
             postRepository.delete(post);
         } else {
             throw new AccessDeniedException("권한이 없습니다.");
@@ -64,7 +64,7 @@ public class PostService {
     public boolean toggleLikeInfo(Long postId, User user) {
         Post post = getPostById(postId);
         Optional<LikeInfo> likeInfo = likeInfoRepository.findByPostIdAndUserId(postId, user.getId());
-        if ( likeInfo.isPresent() ) {
+        if (likeInfo.isPresent()) {
             likeInfoRepository.delete(likeInfo.get());
             return false;
         } else {

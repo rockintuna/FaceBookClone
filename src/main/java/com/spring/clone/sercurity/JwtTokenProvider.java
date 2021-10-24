@@ -24,7 +24,7 @@ public class JwtTokenProvider {
 
     // 토큰 유효시간
     // 프론트엔드와 약속해야 함
-    private Long tokenValidTime = 24*60*60*1000L;
+    private Long tokenValidTime = 24 * 60 * 60 * 1000L;
 
     private final UserDetailsService userDetailsService;
 

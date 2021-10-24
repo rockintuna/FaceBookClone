@@ -24,7 +24,7 @@ public class CommentService {
 
     public Comment editComment(Long commentId, CommentRequestDto requestDto, User user) {
         Comment comment = getCommentById(commentId);
-        if ( comment.isWritedBy(user) ) {
+        if (comment.isWritedBy(user)) {
             comment.setContent(requestDto.getContent());
             return commentRepository.save(comment);
         } else {
@@ -35,7 +35,7 @@ public class CommentService {
     public Long deleteComment(Long commentId, User user) {
         Comment comment = getCommentById(commentId);
         Long postId = comment.getPost().getId();
-        if ( comment.isWritedBy(user) ) {
+        if (comment.isWritedBy(user)) {
             commentRepository.delete(comment);
             return postId;
         } else {

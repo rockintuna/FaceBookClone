@@ -43,7 +43,6 @@ public class User {
     private Sex sex;
 
 
-
     public User(SignUpRequestDto requestDto) {
         this.userId = requestDto.getUserId();
         this.firstName = requestDto.getFirstName();
